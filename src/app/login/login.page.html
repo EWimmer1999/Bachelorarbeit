@@ -1,30 +1,21 @@
 <ion-content>
   <div class="flex-center">
-    <form [formGroup]="form">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title color="success">Bachelorarbeit</ion-card-title>
-        </ion-card-header>
-      
-        <ion-card-content>
-          <ion-item>
-            <ion-input label="Email" labelPlacement="floating" placeholder="Email" formControlName="email"></ion-input>
-          </ion-item>
-          <ion-label color="danger" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
-            <span *ngIf="form.get('email')?.errors?.['required']">Email is required!</span>
-            <span *ngIf="form.get('email')?.errors?.['email']">Email is invalid!</span>
-          </ion-label>
-          <ion-item>
-            <ion-input label="Password" labelPlacement="floating" placeholder="Password" formControlName="password"></ion-input>
-          </ion-item>
-          <ion-label color="danger" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
-            <span *ngIf="form.get('password')?.errors?.['required']">Password is required!</span>
-          </ion-label>
-          <ion-button color="dark" fill="clear" size="full">Forgot email/password?</ion-button>
-          <ion-button color="success" size="full" (click)="login()">Login</ion-button>
-          <ion-button color="success" fill="clear" size="full" (click)="register()">Register</ion-button>
-        </ion-card-content>
-      </ion-card>
-    </form>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title color="success">Login</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-input [(ngModel)]="username" label="Username" labelPlacement="floating" placeholder="Username"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="password" label="Password" type="password" labelPlacement="floating" placeholder="Password"></ion-input>
+        </ion-item>
+        <ion-button color="dark" fill="clear" size="full" (click)="register()">Don't have an account yet?</ion-button>
+        <ion-button color="success" size="full" (click)="login()">Login</ion-button>
+      </ion-card-content>
+    </ion-card>
   </div>
+  
 </ion-content>
