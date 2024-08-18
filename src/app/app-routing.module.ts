@@ -38,7 +38,14 @@ const routes: Routes = [
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule),
     canActivate:[LoginGuard]
   },
-
+  {
+    path: 'reset-pw',
+    loadChildren: () => import('./reset-pw/reset-pw.module').then( m => m.ResetPwPageModule)
+  },
+  {
+    path: 'new-pw',
+    loadChildren: () => import('./new-pw/new-pw.module').then( m => m.NewPWPageModule)
+  },
 
 ];
 

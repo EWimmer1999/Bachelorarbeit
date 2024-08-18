@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu contentId="main-content">
+  <ion-menu contentId="main-content" *ngIf="showMenu">
     <ion-header>
       <ion-toolbar>
         <ion-title>Menü</ion-title>
@@ -7,9 +7,9 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-item routerLink="/home">Home</ion-item>
-        <ion-item routerLink="/about">Über uns</ion-item>
-        <ion-item routerLink="/contact">Kontakt</ion-item>
+        <ion-item routerLink="/home" (click)="closeMenu()">Home</ion-item>
+        <ion-item routerLink="/about" (click)="closeMenu()">Über uns</ion-item>
+        <ion-item routerLink="/contact" (click)="closeMenu()">Kontakt</ion-item>
         <ion-button color="success" size="full" (click)="logout()">Logout</ion-button>
       </ion-list>
     </ion-content>

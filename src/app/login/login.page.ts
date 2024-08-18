@@ -46,4 +46,8 @@ export class LoginPage implements OnInit {
   register() {
     this.router.navigate(['register']);
   }
+
+  resetPw(){
+    this.router.navigate(['reset-pw']);
+  }
 }
