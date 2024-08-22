@@ -30,14 +30,16 @@
     "@ionic/angular": "^8.0.0",
     "@ionic/storage": "^4.0.0",
     "@ionic/storage-angular": "^4.0.0-next.4",
+    "@types/swiper": "^6.0.0",
     "ionicons": "^7.0.0",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
+    "swiper": "^11.1.10",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.0.0",
+    "@angular-devkit/build-angular": "^18.2.1",
     "@angular-eslint/builder": "^18.0.0",
     "@angular-eslint/eslint-plugin": "^18.0.0",
     "@angular-eslint/eslint-plugin-template": "^18.0.0",

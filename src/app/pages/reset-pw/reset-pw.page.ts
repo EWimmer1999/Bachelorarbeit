@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/authentication.service';
+import { AuthService } from 'src/app/services/authentication.service';
 import { AlertController } from '@ionic/angular';
 
 @Component({

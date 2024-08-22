@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { NewPWPageRoutingModule } from './new-pw-routing.module';
+import { CurrentSurveysPageRoutingModule } from './current-surveys-routing.module';
 
-import { NewPWPage } from './new-pw.page';
+import { CurrentSurveysPage } from './current-surveys.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NewPWPageRoutingModule
+    CurrentSurveysPageRoutingModule
   ],
-  declarations: [NewPWPage]
+  declarations: [CurrentSurveysPage]
 })
-export class NewPWPageModule {}
+export class CurrentSurveysPageModule {}

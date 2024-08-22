@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
-import { AuthService } from '../services/authentication.service';
+import { AuthService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-login',
