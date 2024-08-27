@@ -4,16 +4,8 @@ import { LoginGuard } from './guards/login.guard';
 import { AuthGuard } from './guards/authentication.guard';
 import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
 
+
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
-    canActivate:[AuthGuard]
-  },
-  {
-    path: 'message/:id',
-    loadChildren: () => import('./view-message/view-message.module').then( m => m.ViewMessagePageModule)
-  },
   {
     path: '',
     redirectTo: 'login',
@@ -22,11 +14,6 @@ const routes: Routes = [
   {
     path: 'about',
     loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule),
-    canActivate:[AuthGuard]
-  },
-  {
-    path: 'contact',
-    loadChildren: () => import('./contact/contact.module').then( m => m.ContactPageModule),
     canActivate:[AuthGuard]
   },
   {
@@ -66,29 +53,9 @@ const routes: Routes = [
   },
   {
     path: 'overview-surveys',
-    component: OverviewSurveysPage,
-    children: [
-      {
-        path: 'current-surveys',
-        loadChildren: () => import('./pages/current-surveys/current-surveys.module').then(m => m.CurrentSurveysPageModule)
-      },
-      {
-        path: 'completed-surveys',
-        loadChildren: () => import('./pages/completed-surveys/completed-surveys.module').then(m => m.CompletedSurveysPageModule)
-      },
-      {
-        path: '',
-        redirectTo: 'current-surveys',
-        pathMatch: 'full'
-      }
-    ],
-    canActivate:[AuthGuard]
-  },
-  {
-    path: 'overview-surveys',
     loadChildren: () => import('./pages/overview-surveys/overview-surveys.module').then( m => m.OverviewSurveysPageModule)
-  },
-
+  }
+  
 ];
 
 @NgModule({

@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { Message } from '../services/data.service';
+import { Survey} from 'src/app/services/data.service';
 
 @Component({
-  selector: 'app-message',
-  templateUrl: './message.component.html',
-  styleUrls: ['./message.component.scss'],
+  selector: 'survey',
+  templateUrl: './survey.component.html',
+  styleUrls: ['./survey.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessageComponent {
+export class SurveyComponent {
   private platform = inject(Platform);
-  @Input() message?: Message;
+  @Input() survey?: Survey;
   isIos() {
     return this.platform.is('ios')
   }
