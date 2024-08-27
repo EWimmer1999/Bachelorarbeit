@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 export interface Survey {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   questions: Question[];
-  read: boolean
+  isCompleted?: boolean; 
 }
 
 export interface Question {
@@ -38,7 +38,7 @@ export class DataService {
             options: ['Red', 'Green', 'Blue']
           }
         ],
-        read: true
+        isCompleted: true
       }
     ];
   }

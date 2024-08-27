@@ -30,7 +30,7 @@ export class UpdateService {
       );
   
       if (response && response.length > 0) {
-        await this.surveysService.clearStorage();
+        await this.surveysService.clearSurveys();
         await this.surveysService.saveSurveys(response);
         console.log('Surveys successfully fetched and stored locally');
       }

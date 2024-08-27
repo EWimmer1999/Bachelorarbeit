@@ -4,18 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { OverviewSurveysPageRoutingModule } from './overview-surveys-routing.module';
+import { NewSurveysPageRoutingModule } from './new-surveys-routing.module';
 
-import { OverviewSurveysPage } from './overview-surveys.page';
-
+import { NewSurveysPage } from './new-surveys.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    OverviewSurveysPageRoutingModule
+    NewSurveysPageRoutingModule
   ],
   declarations: []
 })
-export class OverviewSurveysPageModule {}
+export class NewSurveysPageModule {}

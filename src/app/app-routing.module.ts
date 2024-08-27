@@ -3,6 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginGuard } from './guards/login.guard';
 import { AuthGuard } from './guards/authentication.guard';
 import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
+import { CompletedSurveysPage } from './pages/surveys/completed-surveys/completed-surveys.page';
+import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
 
 
 const routes: Routes = [
@@ -54,8 +56,15 @@ const routes: Routes = [
   {
     path: 'overview-surveys',
     loadChildren: () => import('./pages/overview-surveys/overview-surveys.module').then( m => m.OverviewSurveysPageModule)
-  }
-  
+  },
+  {
+    path: 'new-surveys',
+    loadChildren: () => import('./pages/surveys/new-surveys/new-surveys.module').then( m => m.NewSurveysPageModule)
+  },
+  { path: 'overview-surveys', component: OverviewSurveysPage, children: [
+    { path: 'completed', component: CompletedSurveysPage },
+    { path: 'new', component: NewSurveysPage }
+  ]},
 ];
 
 @NgModule({

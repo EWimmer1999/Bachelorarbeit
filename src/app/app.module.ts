@@ -10,9 +10,15 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import {provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
+import { CompletedSurveysPage } from './pages/surveys/completed-surveys/completed-surveys.page';
+import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,
+    OverviewSurveysPage,
+    NewSurveysPage,
+    CompletedSurveysPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Storage, provideHttpClient(withInterceptorsFromDi())],
   bootstrap: [AppComponent],

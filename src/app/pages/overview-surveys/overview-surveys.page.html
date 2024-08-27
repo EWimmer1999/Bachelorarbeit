@@ -9,21 +9,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="new">
+      <ion-icon name="list-outline"></ion-icon>
+      <ion-label>New Surveys</ion-label>
+    </ion-tab-button>
 
-  <ion-list *ngIf="surveys.length > 0; else noSurveys">
-    <ion-item *ngFor="let survey of surveys">
-      <ion-label>
-        <h2>{{ survey.title }}</h2>
-      </ion-label>
-    </ion-item> 
-  </ion-list>
-  
-  <ng-template #noSurveys>
-    <p>No surveys available.</p>
-  </ng-template>
-
-</ion-content>
+    <ion-tab-button tab="completed">
+      <ion-icon name="checkmark-done-outline"></ion-icon>
+      <ion-label>Completed Surveys</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
