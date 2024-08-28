@@ -9,9 +9,11 @@ export interface Survey {
 }
 
 export interface Question {
+  id: number;
   text: string;
-  type: 'text' | 'multiple-choice';
-  options?: string[];
+  type: 'text' | 'multiple-choice' | 'single-choice';
+  options?: string[]; // Nur relevant für multiple-choice und single-choice
+  answer?: string | string[]; // Benutzerantworten, Typ hängt vom Fragetyp ab
 }
 
 @Injectable({
@@ -28,15 +30,7 @@ export class DataService {
         title: 'Survey 1',
         description: 'Description for Survey 1',
         questions: [
-          {
-            text: 'What is your name?',
-            type: 'text'
-          },
-          {
-            text: 'Select your favorite colors:',
-            type: 'multiple-choice',
-            options: ['Red', 'Green', 'Blue']
-          }
+         
         ],
         isCompleted: true
       }

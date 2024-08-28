@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { Survey } from './data.service';  // Importiere das Survey Interface oder Typ
+import { Survey } from './data.service';
 
 @Injectable({
   providedIn: 'root'

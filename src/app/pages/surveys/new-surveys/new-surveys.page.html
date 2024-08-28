@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let survey of surveys">
+    <ion-item *ngFor="let survey of surveys" (click)="viewSurveyDetail(survey.id)">
       <ion-label>
         {{ survey.title }}
       </ion-label>

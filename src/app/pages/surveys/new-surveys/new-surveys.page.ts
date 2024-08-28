@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Survey } from 'src/app/services/data.service';
 import { SurveysService } from 'src/app/services/surveys.service';
 import { UpdateService } from 'src/app/services/update.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-surveys',
@@ -13,7 +14,7 @@ export class NewSurveysPage implements OnInit {
 
   surveys: Survey[] = [];
 
-  constructor(private surveysService: SurveysService) { }
+  constructor(private surveysService: SurveysService, private router: Router) { }
 
   async ngOnInit() {
     const allSurveys = await this.surveysService.loadSurveys();
@@ -25,6 +26,10 @@ export class NewSurveysPage implements OnInit {
     // Setze die Umfrage nach Abschluss auf abgeschlossen
     await this.surveysService.markSurveyAsCompleted(survey);
     this.surveys = this.surveys.filter(s => s.id !== survey.id);  // Entferne die Umfrage aus der Liste der neuen Umfragen
+  }
+
+  viewSurveyDetail(surveyId: number) {
+    this.router.navigate([`/survey/${surveyId}`]);
   }
 
 }

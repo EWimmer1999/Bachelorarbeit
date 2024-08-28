@@ -5,6 +5,7 @@ import { AuthGuard } from './guards/authentication.guard';
 import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
 import { CompletedSurveysPage } from './pages/surveys/completed-surveys/completed-surveys.page';
 import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
+import { SurveyDetailPage } from './pages/surveys/survey-detail/survey-detail.page';
 
 
 const routes: Routes = [
@@ -65,6 +66,8 @@ const routes: Routes = [
     { path: 'completed', component: CompletedSurveysPage },
     { path: 'new', component: NewSurveysPage }
   ]},
+  { path: 'survey/:id', component: SurveyDetailPage }
+
 ];
 
 @NgModule({

@@ -1,0 +1,42 @@
+<!-- src/app/pages/surveys/survey-detail/survey-detail.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Survey Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="survey">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ survey.title }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ survey.description }}</p>
+      <ion-list>
+        <ion-item *ngFor="let question of survey.questions">
+          <ion-label>
+            {{ question.text }}
+            <ng-container [ngSwitch]="question.type">
+              <ion-input *ngSwitchCase="'text'" [(ngModel)]="question.answer" placeholder="Type your answer"></ion-input>
+              
+              <ion-item *ngSwitchCase="'multiple-choice'">
+                <ion-label>Choose multiple answers</ion-label>
+                <ion-checkbox *ngFor="let option of question.options" [checked]="isChecked(option)" (ionChange)="onMultipleChoiceChange(option, $event)">{{ option }}</ion-checkbox>
+              </ion-item>
+              
+              <ion-item *ngSwitchCase="'single-choice'">
+                
+                <ion-radio-group [(ngModel)]="question.answer">
+                  <ion-item *ngFor="let option of question.options">
+                    <ion-label>{{ option }}</ion-label>
+                    <ion-radio slot="start" [value]="option"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-item>
+            </ng-container>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
