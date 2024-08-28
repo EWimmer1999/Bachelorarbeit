@@ -55,18 +55,19 @@ const routes: Routes = [
     canActivate:[LoginGuard]
   },
   {
-    path: 'overview-surveys',
-    loadChildren: () => import('./pages/overview-surveys/overview-surveys.module').then( m => m.OverviewSurveysPageModule)
-  },
-  {
     path: 'new-surveys',
     loadChildren: () => import('./pages/surveys/new-surveys/new-surveys.module').then( m => m.NewSurveysPageModule)
   },
   { path: 'overview-surveys', component: OverviewSurveysPage, children: [
+    { path: '', pathMatch: 'full', redirectTo: 'new'},
     { path: 'completed', component: CompletedSurveysPage },
     { path: 'new', component: NewSurveysPage }
-  ]},
-  { path: 'survey/:id', component: SurveyDetailPage }
+  ],
+    canActivate:[AuthGuard]
+  },
+  { path: 'survey/:id', component: SurveyDetailPage,
+    canActivate:[AuthGuard]
+   }
 
 ];
 
