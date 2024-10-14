@@ -8,8 +8,9 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true
   },
-  
+  appId: 'io.ionic.starter',
+  appName: 'Bachelorarbeit',
+  webDir: 'www'
 };
 
 export default config;
-

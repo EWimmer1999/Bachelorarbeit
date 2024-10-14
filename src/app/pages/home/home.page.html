@@ -9,12 +9,11 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content [fullscreen]="true">
   <ion-refresher slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">
@@ -23,8 +22,8 @@
     </ion-toolbar>
   </ion-header>
 
-
-  <h2>Heutige Schritte: {{ todayStepCount }}</h2>
-  <h2>Gesamte Schritte: {{ totalStepCount }}</h2>
-
+  <div class="step-counter">
+    <h2>Steps Counted: {{ steps }}</h2>
+  </div>
 </ion-content>
+

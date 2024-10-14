@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StepCounterService } from 'src/app/services/stepcounter.service';
+
+import {StepCounter} from 'capacitor-stepcounter';
 
 
 @Component({
@@ -7,7 +8,9 @@ import { StepCounterService } from 'src/app/services/stepcounter.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+
 export class HomePage implements OnInit {
+  steps: number = 0;
 
   todayStepCount: number = 0; // Variable für die Schrittanzahl
   totalStepCount: number = 0; // Variable für die Gesamtanzahl der Schritte
@@ -15,27 +18,23 @@ export class HomePage implements OnInit {
   constructor(private stepCounterService: StepCounterService) {}
 
   ngOnInit() {
-    this.getTodayStepCount();
-    this.getTotalStepCount();
+
+    this.startStepCounter();
   }
 
-  getTodayStepCount() {
-    this.stepCounterService.getTodayStepCount()
-      .then((count: any) => {
-        this.todayStepCount = count; // Aktualisiere die Schrittzahl
-      })
-      .catch((error) => {
-        console.error('Error getting today\'s step count:', error);
-      });
+  async startStepCounter() {
+    await StepCounter.start();
+    this.updateStepCount();
   }
 
-  getTotalStepCount() {
-    this.stepCounterService.getStepCount()
-      .then((count: any) => {
-        this.totalStepCount = count; // Aktualisiere die Gesamtanzahl der Schritte
-      })
-      .catch((error) => {
-        console.error('Error getting total step count:', error);
-      });
+  async updateStepCount() {
+    setInterval(async () => {
+      const result = await StepCounter.getStepCount();
+      this.steps = result.steps;
+    }, 1000); // Aktualisiert den Schrittzähler alle 1 Sekunde
+  }
+
+  async stopStepCounter() {
+    await StepCounter.stop();
   }
 }

@@ -1,7 +1,6 @@
 {
-  "typescript.preferences.autoImportFileExcludePatterns": [
-    "@ionic/angular/common",
-    "@ionic/angular/standalone"
-  ],
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "typescript.preferences.autoImportFileExcludePatterns": ["@ionic/angular/common", "@ionic/angular/standalone"],
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Program Files\\Java\\jdk-22"
+  }
 }
