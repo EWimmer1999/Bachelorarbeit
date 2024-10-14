@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+
 import {StepCounter} from 'capacitor-stepcounter';
+
 
 @Component({
   selector: 'app-home',
@@ -10,9 +12,13 @@ import {StepCounter} from 'capacitor-stepcounter';
 export class HomePage implements OnInit {
   steps: number = 0;
 
-  constructor() { }
+  todayStepCount: number = 0; // Variable für die Schrittanzahl
+  totalStepCount: number = 0; // Variable für die Gesamtanzahl der Schritte
+
+  constructor(private stepCounterService: StepCounterService) {}
 
   ngOnInit() {
+
     this.startStepCounter();
   }
 
