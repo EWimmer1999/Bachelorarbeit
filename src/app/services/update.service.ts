@@ -4,6 +4,8 @@ import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
 import { Survey } from './data.service';
+import { environment } from 'src/environments/environment.prod';
+import { serverUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +40,27 @@ export class UpdateService {
       console.error('Error fetching surveys:', error);
     }
   }
+
+  async sendAnswer(surveyId: string, responses: any) {
+    try {
+      // Token aus dem Storage abrufen
+      const token = await this.storageService.get('token');
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+
+      // Daten für die Anfrage
+      const surveyAnswers = { surveyId, responses };
+
+      const response = await lastValueFrom(this.http.post('http://192.168.0.77:3000/submit-survey', surveyAnswers, { headers }));
+
+      console.log('Survey answers submitted successfully:', response);
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        console.error('Failed to upload answers!', error.error);
+      }
+    }
+  }
+  
   
 }

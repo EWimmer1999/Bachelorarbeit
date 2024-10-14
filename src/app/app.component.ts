@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/authentication.service';
+import { SurveysService } from './services/surveys.service';
+import { StepCounterService } from './services/stepcounter.service';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +14,15 @@ import { AuthService } from './services/authentication.service';
 export class AppComponent implements OnInit {
   showMenu = true;
 
-  constructor(private router: Router, private menu: MenuController, private authService: AuthService) {}
+  constructor(private router: Router, private menu: MenuController, private authService: AuthService,
+    private surveysService: SurveysService, private StepCounter: StepCounterService
+  ) {}
 
   ngOnInit() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.showMenu = !['/login'].includes(this.router.url); // Menü nicht auf der Login-Seite anzeigen
+      this.showMenu = !['/login'].includes(this.router.url); 
     });
   }
 
@@ -28,5 +32,6 @@ export class AppComponent implements OnInit {
 
   logout(){
     this.authService.logout();
+    this.surveysService.clearSurveys();
   }
 }

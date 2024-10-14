@@ -8,6 +8,7 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true
   },
+  
 };
 
 export default config;

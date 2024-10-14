@@ -9,6 +9,7 @@ import { lastValueFrom } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   public isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
