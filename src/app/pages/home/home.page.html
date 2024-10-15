@@ -34,4 +34,16 @@
     <ion-button expand="full" (click)="updateStepCount()">
       Schritte aktualisieren
     </ion-button>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Aktueller Geräuschpegel</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <h2>{{ currentDecibels.toFixed(2) }} dB</h2>
+      </ion-card-content>
+    </ion-card>
+  
+    <ion-button expand="full" (click)="startNoiseMeter()">Starten</ion-button>
+    <ion-button expand="full" color="danger" (click)="stopNoiseMeter()">Stoppen</ion-button>
 </ion-content>
