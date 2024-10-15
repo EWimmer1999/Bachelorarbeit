@@ -22,8 +22,16 @@
     </ion-toolbar>
   </ion-header>
 
-  <div class="step-counter">
-    <h2>Steps Counted: {{ steps }}</h2>
-  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Aktuelle Schrittanzahl</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2>{{ steps }}</h2>
+    </ion-card-content>
+    </ion-card>
+  
+    <ion-button expand="full" (click)="updateStepCount()">
+      Schritte aktualisieren
+    </ion-button>
 </ion-content>
-

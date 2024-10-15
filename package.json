@@ -35,7 +35,6 @@
     "capacitor-stepcounter": "file:../Plugin/capacitor-stepcounter",
     "ionicons": "^7.0.0",
     "jwt-decode": "^4.0.0",
-    "net.texh.cordovapluginstepcounter": "github:DigitalsunrayMedia/cordova-plugin-stepcounter",
     "rxjs": "^7.5.0",
     "swiper": "^11.1.10",
     "tslib": "^2.3.0",

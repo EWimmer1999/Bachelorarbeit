@@ -1,40 +1,50 @@
-import { Component, OnInit } from '@angular/core';
-
-import {StepCounter} from 'capacitor-stepcounter';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { StepCounter } from 'capacitor-stepcounter';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+export class HomePage implements OnInit, OnDestroy {
+  steps: number = 0; // Variable für die aktuelle Schrittanzahl
+  interval: any; // Variable für das Intervall
 
-export class HomePage implements OnInit {
-  steps: number = 0;
+  constructor() {}
 
-  todayStepCount: number = 0; // Variable für die Schrittanzahl
-  totalStepCount: number = 0; // Variable für die Gesamtanzahl der Schritte
+  async ngOnInit() {
+    await this.startStepCounter();
+    this.updateStepCount(); // Initialer Abruf der Schrittanzahl
 
-  constructor(private stepCounterService: StepCounterService) {}
-
-  ngOnInit() {
-
-    this.startStepCounter();
+    // Setze ein Intervall, um die Schrittanzahl alle 5 Sekunden zu aktualisieren
+    this.interval = setInterval(() => {
+      this.updateStepCount();
+    }, 5000);
   }
 
-  async startStepCounter() {
-    await StepCounter.start();
-    this.updateStepCount();
+  private async startStepCounter() {
+    try {
+      await StepCounter.start();
+    } catch (error) {
+      alert('Fehler beim Starten des Schrittzählers: ' + JSON.stringify(error));
+    }
   }
 
-  async updateStepCount() {
-    setInterval(async () => {
-      const result = await StepCounter.getStepCount();
-      this.steps = result.steps;
-    }, 1000); // Aktualisiert den Schrittzähler alle 1 Sekunde
+  public async updateStepCount() {
+    try {
+        const result = await StepCounter.getStepCount(); // Hier sollte ein Objekt mit 'steps' zurückgegeben werden
+        this.steps = result.steps; // Aktualisiere die Variable für die Anzeige
+    } catch (error) {
+        alert('Fehler beim Abrufen der Schrittanzahl: ' + JSON.stringify(error));
+    }
   }
 
-  async stopStepCounter() {
-    await StepCounter.stop();
+
+  async ngOnDestroy() {
+    // Intervall löschen, wenn die Komponente zerstört wird
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    await StepCounter.stop(); // Schrittzähler stoppen
   }
 }
