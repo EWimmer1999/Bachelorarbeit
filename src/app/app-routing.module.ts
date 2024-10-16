@@ -67,7 +67,12 @@ const routes: Routes = [
   },
   { path: 'survey/:id', component: SurveyDetailPage,
     canActivate:[AuthGuard]
-   }
+   },
+  {
+    path: 'noisemeter',
+    loadChildren: () => import('./pages/data/noisemeter/noisemeter.module').then( m => m.NoisemeterPageModule)
+  }
+
 
 ];
 

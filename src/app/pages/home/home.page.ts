@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StepCounter } from 'capacitor-stepcounter';
 import { NoiseMeter } from 'capacitor-noisemeter';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -10,21 +11,20 @@ import { NoiseMeter } from 'capacitor-noisemeter';
 export class HomePage implements OnInit, OnDestroy {
   steps: number = 0;
   interval: any;
-  noiseData: number[] = []; // Array zur Speicherung der Lautstärkewerte
-  averageNoise: number = 0; // Durchschnitt der Lautstärke
+  noiseData: number[] = [];
+  averageNoise: number = 0;
   currentDecibels: number = 0;
 
-  constructor() {}
+  constructor(private storage: StorageService) {} // Storage injizieren
 
   async ngOnInit() {
+    await this.storage.initStorage(); // Storage initialisieren
     await this.startStepCounter();
     this.updateStepCount();
 
-    // Setze ein Intervall, um die Schrittanzahl alle 5 Sekunden zu aktualisieren
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
-
   }
 
   private async startStepCounter() {
@@ -34,7 +34,6 @@ export class HomePage implements OnInit, OnDestroy {
       alert('Fehler beim Starten des Schrittzählers: ' + JSON.stringify(error));
     }
   }
-
 
   public async updateStepCount() {
     try {
@@ -50,7 +49,7 @@ export class HomePage implements OnInit, OnDestroy {
       await NoiseMeter.startRecording();
       this.interval = setInterval(() => {
         this.getNoiseLevel();
-      }, 1000); // Jede Sekunde den Wert aktualisieren
+      }, 1000);
     } catch (error) {
       alert('Fehler beim Starten des NoiseMeters: ' + JSON.stringify(error));
     }
@@ -60,22 +59,53 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       const result = await NoiseMeter.getNoiseLevel();
       this.currentDecibels = result.decibels;
+      
+      if (!isNaN(this.currentDecibels)) {
+        this.noiseData.push(this.currentDecibels);
+      } else {
+        console.log('Ungültiger Geräuschpegel: ', this.currentDecibels);
+      }
     } catch (error) {
       console.log('Fehler beim Abrufen des Geräuschpegels:', error);
     }
   }
-
+  
 
   async stopNoiseMeter() {
     try {
       clearInterval(this.interval);
       await NoiseMeter.stop();
+      this.calculateAverageNoise();
+      this.saveAverageNoiseWithDate();
     } catch (error) {
       alert('Fehler beim Stoppen des NoiseMeters: ' + JSON.stringify(error));
     }
   }
 
+  private calculateAverageNoise() {
+    if (this.noiseData.length === 0) {
+      this.averageNoise = 0; // Falls keine Daten vorhanden sind
+      return;
+    }
   
+    const sum = this.noiseData.reduce((acc, val) => acc + val, 0);
+    this.averageNoise = sum / this.noiseData.length;
+  }
+  
+
+  private async saveAverageNoiseWithDate() {
+    const date = new Date().toISOString();
+    const savedData = {
+      date: date,
+      averageNoise: this.averageNoise
+    };
+  
+    console.log('Zu speichernde Daten:', savedData);
+    await this.storage.set(date, savedData);
+    console.log('Gespeicherte Daten:', savedData);
+  }
+  
+
   async ngOnDestroy() {
     if (this.interval) {
       clearInterval(this.interval);
