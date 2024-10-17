@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './tipps.page.html',
   styleUrls: ['./tipps.page.scss'],
 })
-export class TippsPage implements OnInit {
+export class TippsPage {
   tipps: Tipp[] = [];
 
   constructor(
@@ -18,14 +18,10 @@ export class TippsPage implements OnInit {
     private updateService: UpdateService
   ) {}
 
-  async ngOnInit() {
-    
-  }
-
   async ionViewWillEnter(){
     this.tipps = await this.tippsService.loadTipps();
     console.log('Loaded tipps from storage:', this.tipps);
-
+    
     try {
       await this.updateService.getTipps();
       this.tipps = await this.tippsService.loadTipps();
