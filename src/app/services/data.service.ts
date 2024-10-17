@@ -16,14 +16,18 @@ export interface Question {
   answer?: string | string[]; // Benutzerantworten, Typ hängt vom Fragetyp ab
 }
 
+export interface Tipp {
+  id: number;
+  title: string,
+  flavour: string,
+  text: string
+}
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  // Dein Service-Code hier
 
   getSurveys(): Survey[] {
-    // Beispiel-Daten, die im Service bereitgestellt werden könnten
     return [
       {
         id: 1,
@@ -35,5 +39,16 @@ export class DataService {
         isCompleted: true
       }
     ];
+  }
+
+  getTipps(): Tipp[] {
+    return [
+      {
+        id: 1,
+        title: 'TestTipp',
+        flavour: 'This is a flavour text',
+        text: 'This is a very long test text',
+      }
+    ]
   }
 }
