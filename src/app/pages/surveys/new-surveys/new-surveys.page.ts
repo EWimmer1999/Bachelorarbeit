@@ -22,8 +22,6 @@ export class NewSurveysPage implements OnInit {
   }
 
   async startSurvey(survey: Survey) {
-    // Logik zum Starten der Umfrage
-    // Setze die Umfrage nach Abschluss auf abgeschlossen
     await this.surveysService.markSurveyAsCompleted(survey);
     this.surveys = this.surveys.filter(s => s.id !== survey.id);  // Entferne die Umfrage aus der Liste der neuen Umfragen
   }

@@ -5,6 +5,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { serverUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,8 @@ export class AuthService {
     private router: Router,
     private http: HttpClient
   ) {}
+
+  url = serverUrl;
 
   async isAuthenticatedUser(): Promise<boolean> {
     const token = await this.storageService.get("token");  
@@ -45,7 +48,7 @@ export class AuthService {
 
   async register(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>('http://192.168.0.77:3000/register', postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/register`, postData, { observe: 'response' }));
       if (response.status === 201) {
         console.log('User registered successfully');
         await this.storageService.set("token", response.body?.token);
@@ -61,7 +64,7 @@ export class AuthService {
   
   async login(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>('http://192.168.0.77:3000/login', postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}login`, postData, { observe: 'response' }));
       if (response.status === 200) {
         console.log('User logged in successfully');
         await this.storageService.set("token", response.body?.token);
@@ -77,7 +80,7 @@ export class AuthService {
 
   async sendEmail(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>('http://192.168.0.77:3000/reset-password-request', postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/reset-password-request`, postData, { observe: 'response' }));
       if (response) {
         console.log('Password reset email sent');
       }
@@ -88,7 +91,7 @@ export class AuthService {
 
   async resetPW(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>('http://192.168.0.77:3000/reset-password', postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/reset-password`, postData, { observe: 'response' }));
       if (response) {
         console.log('Password reset successfully');
       }
@@ -117,7 +120,7 @@ export class AuthService {
   async validateToken(token: string): Promise<boolean> {
     try {
       const response = await lastValueFrom(this.http.post<{ valid: boolean }>(
-        'http://192.168.0.77:3000/authenticate',
+        `${this.url}/authenticate`,
         {}, 
         {
           headers: new HttpHeaders({
