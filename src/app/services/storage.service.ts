@@ -34,4 +34,9 @@ export class StorageService {
   async keys(): Promise<string[]> {
     return this.storage ? this.storage.keys() : [];
   }
+
+  async clear(): Promise<void> {
+    await this.storage.clear(); 
+  }
+  
 }

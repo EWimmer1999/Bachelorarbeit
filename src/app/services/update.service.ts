@@ -6,6 +6,7 @@ import { SurveysService } from './surveys.service';
 import { TippsService } from './tipps.service';
 import { Survey, Tipp } from './data.service';
 import { serverUrl } from 'src/environments/environment';
+import { AuthService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class UpdateService {
 
   private url = serverUrl;
 
-  private surveysUrl = `${this.url}/surveys`; // URL deines Servers
+  private surveysUrl = `${this.url}/surveys`; 
 
   private tippUrl = `${this.url}/tipps`;
 
@@ -22,10 +23,10 @@ export class UpdateService {
     private http: HttpClient,
     private storageService: StorageService,
     private surveysService: SurveysService,
-    private tippsService: TippsService
+    private tippsService: TippsService,
+    private authService: AuthService
   ) {}
 
-  // Methode zum Abrufen der Umfragen
   async getSurveys(): Promise<void> {
     try {
       const headers = new HttpHeaders({
@@ -36,10 +37,12 @@ export class UpdateService {
         this.http.get<Survey[]>(this.surveysUrl, { headers })
       );
   
-      if (response && response.length > 0) {
+      if (response) {
         await this.surveysService.clearSurveys();
         await this.surveysService.saveSurveys(response);
         console.log('Surveys successfully fetched and stored locally');
+
+        this.authService.updateToken();
       }
     } catch (error) {
       console.error('Error fetching surveys:', error);
@@ -48,13 +51,12 @@ export class UpdateService {
 
   async sendAnswer(surveyId: string, responses: any, noiseData: any) {
     try {
-      // Token aus dem Storage abrufen
+
       const token = await this.storageService.get('token');
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`
       });
   
-      
       const surveyAnswers = { 
         surveyId, 
         responses, 
@@ -71,6 +73,7 @@ export class UpdateService {
     }
   }
 
+
   async getTipps(): Promise<void> {
 
     try {
@@ -81,13 +84,14 @@ export class UpdateService {
       const response: Tipp[] = await lastValueFrom(
         this.http.get<Tipp[]>(this.tippUrl, { headers })
       );
-      console.log('Serverantwort:', response); // Überprüfe die Antwort
+      console.log('Serverantwort:', response); 
       
-  
-      if (response && response.length > 0) {
+      if (response) {
         await this.tippsService.clearTipps();
         await this.tippsService.saveTipps(response);
-        console.log('Tipps successfully fetched and stored locally'); // Korrigiere den Text hier
+        console.log('Tipps successfully fetched and stored locally');
+
+        this.authService.updateToken();
       }
     } catch (error) {
       console.error('Error fetching tipps:', error);

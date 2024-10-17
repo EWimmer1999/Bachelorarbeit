@@ -3,7 +3,7 @@ import { StorageService } from './storage.service';
 import { Router } from '@angular/router';
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { serverUrl } from 'src/environments/environment';
 
@@ -78,6 +78,40 @@ export class AuthService {
     }
   }
 
+  async updateToken(): Promise<void> {
+    try {
+      const currentToken = await this.storageService.get("token");
+      
+      const response = await lastValueFrom(this.http.post<{ token: string }>(
+        `${this.url}/update-token`,
+        {}, 
+        {
+          headers: new HttpHeaders({
+            'Authorization': `Bearer ${currentToken}`
+          }),
+          observe: 'response'
+        }
+      ));
+  
+      if (response.status === 200 && response.body?.token) {
+    
+        const newToken = response.body.token;
+  
+        await this.storageService.remove("token");
+        await this.storageService.set("token", newToken);
+  
+        this.isAuthenticated.next(true);
+        
+        console.log("Token erfolgreich aktualisiert: " + newToken);
+      } else {
+        console.error("Token-Aktualisierung fehlgeschlagen. Serverantwort ungültig.");
+      }
+    } catch (error) {
+      console.error("Fehler bei der Token-Aktualisierung:", error);
+    }
+  }
+  
+  
   async sendEmail(postData: any): Promise<void> {
     try {
       const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/reset-password-request`, postData, { observe: 'response' }));
@@ -102,7 +136,7 @@ export class AuthService {
 
   async logout(): Promise<void> {
     this.isAuthenticated.next(false);
-    await this.storageService.remove("token");
+    await this.storageService.clear();
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }  
 
