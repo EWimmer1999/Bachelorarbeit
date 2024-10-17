@@ -8,12 +8,17 @@ import { StorageService } from 'src/app/services/storage.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+
+
 export class HomePage implements OnInit, OnDestroy {
   steps: number = 0;
   interval: any;
   noiseData: number[] = [];
   averageNoise: number = 0;
   currentDecibels: number = 0;
+  noised: boolean = false;
+
+  isMeasuring: boolean = false;
 
   constructor(private storage: StorageService) {} // Storage injizieren
 
@@ -25,6 +30,22 @@ export class HomePage implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
+  }
+
+  async ionViewDidLeave() {
+    if (this.noised) {
+      this.stopNoiseMeter()
+      this.noised = false;
+    }
+  }
+
+  async toggleNoiseMeter() {
+    if (this.isMeasuring) {
+      await this.stopNoiseMeter();
+    } else {
+      await this.startNoiseMeter();
+    }
+    this.isMeasuring = !this.isMeasuring;
   }
 
   private async startStepCounter() {
@@ -50,6 +71,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.interval = setInterval(() => {
         this.getNoiseLevel();
       }, 1000);
+      this.noised = true;
     } catch (error) {
       alert('Fehler beim Starten des NoiseMeters: ' + JSON.stringify(error));
     }
@@ -70,13 +92,13 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
   
-
   async stopNoiseMeter() {
     try {
       clearInterval(this.interval);
       await NoiseMeter.stop();
       this.calculateAverageNoise();
       this.saveAverageNoiseWithDate();
+      this.noised = false;
     } catch (error) {
       alert('Fehler beim Stoppen des NoiseMeters: ' + JSON.stringify(error));
     }

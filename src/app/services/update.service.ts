@@ -41,19 +41,23 @@ export class UpdateService {
     }
   }
 
-  async sendAnswer(surveyId: string, responses: any) {
+  async sendAnswer(surveyId: string, responses: any, noiseData: any) {
     try {
       // Token aus dem Storage abrufen
       const token = await this.storageService.get('token');
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`
       });
-
+  
       // Daten für die Anfrage
-      const surveyAnswers = { surveyId, responses };
-
+      const surveyAnswers = { 
+        surveyId, 
+        responses, 
+        noiseData  // Füge hier das noiseData hinzu
+      };
+  
       const response = await lastValueFrom(this.http.post('http://192.168.0.77:3000/submit-survey', surveyAnswers, { headers }));
-
+  
       console.log('Survey answers submitted successfully:', response);
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
@@ -61,6 +65,7 @@ export class UpdateService {
       }
     }
   }
+  
   
   
 }
