@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -19,9 +19,14 @@ export class LoginPage implements OnInit {
 
   form!: FormGroup;
 
-  constructor(private router: Router, private http: HttpClient, private authService: AuthService, private alertController: AlertController) { }
+  constructor(private router: Router, private http: HttpClient, 
+    private cdr: ChangeDetectorRef, private authService: AuthService, private alertController: AlertController) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    this.clearFields()
   }
 
   login() {
@@ -49,5 +54,10 @@ export class LoginPage implements OnInit {
 
   resetPw(){
     this.router.navigate(['reset-pw']);
+  }
+
+  clearFields() {
+    this.username = '';
+    this.password = '';
   }
 }

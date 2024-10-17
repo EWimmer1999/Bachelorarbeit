@@ -11,7 +11,7 @@ import { UpdateService } from 'src/app/services/update.service';
 })
 export class OverviewSurveysPage implements OnInit {
 
-  surveys: Survey[] = [];  // Array zum Speichern der Umfragen
+  surveys: Survey[] = [];
 
   constructor(private updateService: UpdateService, private surveysService: SurveysService) {}
 
