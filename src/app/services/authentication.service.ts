@@ -64,7 +64,7 @@ export class AuthService {
   
   async login(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}login`, postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/login`, postData, { observe: 'response' }));
       if (response.status === 200) {
         console.log('User logged in successfully');
         await this.storageService.set("token", response.body?.token);
