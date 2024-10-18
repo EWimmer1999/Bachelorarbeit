@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
 import { TippsService } from './tipps.service';
-import { Survey, Tipp } from './data.service';
+import { Survey, SurveyAnswer, Tipp } from './data.service';
 import { serverUrl } from 'src/environments/environment';
 import { AuthService } from './authentication.service';
 
@@ -18,6 +18,8 @@ export class UpdateService {
   private surveysUrl = `${this.url}/surveys`; 
 
   private tippUrl = `${this.url}/tipps`;
+
+  private answerUrl = `${this.url}/user-surveys`;
 
   constructor(
     private http: HttpClient,
@@ -36,22 +38,33 @@ export class UpdateService {
       const response: Survey[] = await lastValueFrom(
         this.http.get<Survey[]>(this.surveysUrl, { headers })
       );
+
+      console.log(response)
   
       if (response) {
-        await this.surveysService.clearSurveys();
-        await this.surveysService.saveSurveys(response);
-        console.log('Surveys successfully fetched and stored locally');
+        const completedSurveys = response.filter(survey => survey.completed);
 
+        const pendingSurveys = response.filter(survey => !survey.completed);
+  
+        await this.surveysService.clearSurveys();
+  
+        await this.surveysService.saveSurveys(completedSurveys, 'completed');
+        
+        await this.surveysService.saveSurveys(pendingSurveys, 'pending');
+  
+        console.log('Surveys successfully fetched and stored locally');
+  
         this.authService.updateToken();
       }
     } catch (error) {
       console.error('Error fetching surveys:', error);
     }
   }
-
-
+  
   async sendAnswer(surveyId: string, responses: any, noiseLevel: any) {
     try {
+
+      var completed = true;
 
       const token = await this.storageService.get('token');
       const headers = new HttpHeaders({
@@ -61,7 +74,8 @@ export class UpdateService {
       const surveyAnswers = { 
         surveyId, 
         responses, 
-        noiseLevel 
+        noiseLevel,
+        completed
       };
   
       const response = await lastValueFrom(this.http.post(`${this.url}/submit-survey`, surveyAnswers, { headers }));
@@ -98,4 +112,29 @@ export class UpdateService {
       console.error('Error fetching tipps:', error);
     }
   }
+
+
+  async getAnswers(): Promise<void> {
+    try {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${await this.storageService.get('token')}`
+      });
+
+      console.log(headers)
+  
+      const response: SurveyAnswer[] = await lastValueFrom(
+        this.http.get<SurveyAnswer[]>(this.answerUrl, { headers })
+      );
+  
+      console.log('Erhaltene Antworten vom Server:', response);
+  
+      if (response && response.length > 0) {
+        await this.surveysService.saveSurveyAnswers(response);
+        console.log('Antworten erfolgreich lokal gespeichert');
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Antworten:', error);
+    }
+  }
+  
 }

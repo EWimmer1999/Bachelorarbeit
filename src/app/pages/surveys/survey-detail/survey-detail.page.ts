@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SurveysService } from 'src/app/services/surveys.service';
-import { Survey } from 'src/app/services/data.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { NoiseMeter } from 'capacitor-noisemeter';
 
 @Component({
   selector: 'app-survey-detail',
-  templateUrl: './survey-detail.page.html',
+  templateUrl:  './survey-detail.page.html',
   styleUrls: ['./survey-detail.page.scss'],
 })
+
 export class SurveyDetailPage implements OnInit {
-  survey: any;  // Annahme: Deine Umfrage-Daten werden hier geladen
-  token: string | undefined; // Deklariere userId
+  survey: any;
+  token: string | undefined;
 
   steps: number = 0;
   interval: any;
@@ -33,7 +33,7 @@ export class SurveyDetailPage implements OnInit {
 
   async ngOnInit() {
     const surveyId = +this.route.snapshot.paramMap.get('id')!;
-    this.survey = (await this.surveysService.loadSurveys()).find(s => s.id === surveyId) || null;
+    this.survey = (await this.surveysService.loadpendingSurveys()).find(s => s.id === surveyId) || null;
     this.token= await this.storageService.get('token');
   }
 
@@ -116,13 +116,11 @@ export class SurveyDetailPage implements OnInit {
     const question = this.survey.questions.find((q: { type: string; }) => q.type === 'multiple-choice');
     if (question) {
       if (event.detail.checked) {
-        // Initialize answer as array if it's not already
         if (!Array.isArray(question.answer)) {
           question.answer = [];
         }
         (question.answer as string[]).push(option);
       } else {
-        // Ensure answer is an array before filtering
         if (Array.isArray(question.answer)) {
           question.answer = (question.answer as string[]).filter(o => o !== option);
         }
@@ -130,10 +128,8 @@ export class SurveyDetailPage implements OnInit {
     }
   }
 
-  
   async submitSurvey() {
     await this.stopNoiseMeter();
-    console.log(this.averageNoise)
   
     const responses = this.survey.questions.map((question: any) => {
       return {
@@ -141,16 +137,42 @@ export class SurveyDetailPage implements OnInit {
         answer: JSON.stringify(question.answer || question.options.filter((opt: any) => opt.selected))
       };
     });
-
-    this.updateService.sendAnswer(this.survey.id, responses, this.averageNoise)
-      .then(() => {
-        console.log('Survey submitted successfully');
-        this.router.navigate(['overview-surveys']);
-      })
-      .catch((error) => {
-        console.error('Error submitting survey:', error);
-      });
-  }
-
   
+    try {
+      await this.updateService.sendAnswer(this.survey.id, responses, this.averageNoise);
+      console.log('Survey submitted successfully');
+  
+      await this.deleteSurvey(this.survey);
+    } catch (error) {
+      console.error('Fehler beim Übermitteln der Umfrage:', error);
+      
+      await this.saveSurveyLocally(this.survey, responses);
+    }
+
+    this.router.navigate([`/overview-surveys`]);
+  }
+  
+  private async deleteSurvey(survey: any) {
+
+    let pendingSurveys = await this.storageService.get('pendingSurveys') || [];
+  
+    pendingSurveys = pendingSurveys.filter((s: any) => s.survey.id !== survey.id);
+  
+    await this.storageService.set('pendingSurveys', pendingSurveys);
+    console.log('Umfrage wurde erfolgreich gelöscht:', survey);
+  }
+  
+  private async saveSurveyLocally(survey: any, responses: any) {
+    let pendingSurveys = await this.storageService.get('pendingSurveys') || [];
+  
+    pendingSurveys.push({
+      survey: survey,
+      responses: responses,
+      averageNoise: this.averageNoise,
+      timestamp: new Date().toISOString()
+    });
+  
+    await this.storageService.set('pendingSurveys', pendingSurveys);
+    console.log('Umfrage wurde lokal zwischengespeichert:', survey);
+  }
 }

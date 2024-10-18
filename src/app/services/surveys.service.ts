@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { Survey } from './data.service';
+import { Survey, SurveyAnswer } from './data.service';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment, serverUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SurveysService {
 
-  private surveysKey = 'surveys';  // Key unter dem die Umfragen gespeichert werden
-  private completedSurveysKey = 'completedSurveys';  // Key für abgeschlossene Umfragen
+  private completesurveysKey = 'completesurveys';
+  private pendingsurveysKey = 'pendingsurveys';
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private http: HttpClient) {
     this.initStorage();
   }
 
@@ -18,39 +21,56 @@ export class SurveysService {
     await this.storage.create();
   }
 
-  async saveSurveys(surveys: Survey[]): Promise<void> {
-    const existingSurveys = await this.loadSurveys() || [];
-    const newSurveys = surveys.filter(survey => !existingSurveys.some(existingSurvey => existingSurvey.id === survey.id));
-  
-    const allSurveys = [...existingSurveys, ...newSurveys];
-    await this.storage.set(this.surveysKey, allSurveys);
-  }
-  
-  async loadSurveys(): Promise<Survey[]> {
-    return await this.storage.get(this.surveysKey) || [];
+  async saveSurveys(surveys: Survey[], completed: string): Promise<void> {
+    if (!surveys || surveys.length === 0) {
+        return; 
+    }
+
+    if (completed === 'completed') {
+        await this.storage.set(this.completesurveysKey, surveys);
+    } else {
+        await this.storage.set(this.pendingsurveysKey, surveys);
+    }
   }
 
-  async markSurveyAsCompleted(survey: Survey): Promise<void> {
-    let completedSurveys = await this.loadCompletedSurveys() || [];
-    completedSurveys = [...completedSurveys, survey];
-    await this.storage.set(this.completedSurveysKey, completedSurveys);
-
-    // Optionally remove the completed survey from the 'new' surveys list
-    let newSurveys = await this.loadSurveys();
-    newSurveys = newSurveys.filter(s => s.id !== survey.id);
-    await this.storage.set(this.surveysKey, newSurveys);
+  async loadpendingSurveys(): Promise<Survey[]> {
+    return await this.storage.get(this.pendingsurveysKey) || [];
   }
 
-  async loadCompletedSurveys(): Promise<Survey[]> {
-    const allSurveys = await this.loadSurveys();
-    return allSurveys.filter(survey => survey.isCompleted);
-  }
-  
   async clearSurveys() {
-    await this.storage.remove(this.surveysKey);
+    await this.storage.remove(this.pendingsurveysKey);
+    await this.storage.remove(this.completesurveysKey);
   }
 
   async clearCompletedSurveys() {
-    await this.storage.remove(this.completedSurveysKey);
+    await this.storage.remove(this.completesurveysKey);
   }
+
+  async saveSurveyAnswers(answers: SurveyAnswer[]): Promise<void> {
+    try {
+        console.log('Speichern der Antworten unter dem Schlüssel "completedSurveys":', answers);
+        await this.storage.set('completedSurveys', answers);
+        console.log('Antworten erfolgreich im lokalen Speicher abgelegt');
+    } catch (error) {
+        console.error('Fehler beim Speichern der Antworten im lokalen Speicher:', error);
+    }
+  }
+
+  async loadCompletedSurveys(): Promise<SurveyAnswer[]> {
+    try {
+        // Lade die erledigten Umfragen aus dem lokalen Storage
+        const completedSurveys = await this.storage.get('completedSurveys');
+        console.log('Laden der erledigten Umfragen:', completedSurveys); // Füge dies hinzu
+
+        // Stelle sicher, dass die Daten als Array von SurveyAnswer zurückgegeben werden
+        return completedSurveys ? (completedSurveys as SurveyAnswer[]) : [];
+    } catch (error) {
+        console.error('Fehler beim Laden der erledigten Umfragen:', error);
+        return [];
+    }
+  }
+
+
+
+  
 }

@@ -7,6 +7,7 @@ import { CompletedSurveysPage } from './pages/surveys/completed-surveys/complete
 import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
 import { SurveyDetailPage } from './pages/surveys/survey-detail/survey-detail.page';
 import { TippDetailPage } from './pages/tipp-detail/tipp-detail.page';
+import { CompletedSurveyDetailPage } from './pages/surveys/completed-survey-detail/completed-survey-detail.page';
 
 
 const routes: Routes = [
@@ -64,6 +65,9 @@ const routes: Routes = [
   { path: 'survey/:id', component: SurveyDetailPage,
     canActivate:[AuthGuard]
   },
+  { path: 'completesurvey/:id', component: CompletedSurveyDetailPage,
+    canActivate:[AuthGuard]
+  },
   { path: 'tipp/:id', component: TippDetailPage,
     canActivate:[AuthGuard]
   },
@@ -74,9 +78,11 @@ const routes: Routes = [
   {
     path: 'tipp-detail',
     loadChildren: () => import('./pages/tipp-detail/tipp-detail.module').then( m => m.TippDetailPageModule)
+  },
+  {
+    path: 'completed-survey-detail',
+    loadChildren: () => import('./pages/surveys/completed-survey-detail/completed-survey-detail.module').then( m => m.CompletedSurveyDetailPageModule)
   }
-
-
 
 ];
 

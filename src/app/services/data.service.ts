@@ -5,7 +5,7 @@ export interface Survey {
   title: string;
   description?: string;
   questions: Question[];
-  isCompleted?: boolean; 
+  completed?: string; 
 }
 
 export interface Question {
@@ -14,6 +14,20 @@ export interface Question {
   type: 'text' | 'multiple-choice' | 'single-choice';
   options?: string[]; // Nur relevant für multiple-choice und single-choice
   answer?: string | string[]; // Benutzerantworten, Typ hängt vom Fragetyp ab
+}
+
+export interface SurveyAnswer {
+  surveyId: number;
+  surveyTitle: string;
+  surveyDescription: string;
+  completed: boolean;
+  noiseLevel: number;
+  questions: {
+    questionId: number;
+    questionText: string;
+    questionType: string;
+    answer: string | null;
+  }[];
 }
 
 export interface Tipp {
@@ -25,6 +39,8 @@ export interface Tipp {
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class DataService {
 
   getSurveys(): Survey[] {
@@ -36,7 +52,7 @@ export class DataService {
         questions: [
          
         ],
-        isCompleted: true
+        completed: 'true'
       }
     ];
   }
