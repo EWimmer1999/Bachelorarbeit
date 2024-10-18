@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AboutPageRoutingModule } from './about-routing.module';
+import { NoisemeterPageRoutingModule } from './noisemeter-routing.module';
 
-import { AboutPage } from './about.page';
+import { NoisemeterPage } from './noisemeter.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AboutPageRoutingModule
+    NoisemeterPageRoutingModule
   ],
-  declarations: [AboutPage]
+  declarations: [NoisemeterPage]
 })
-export class AboutPageModule {}
+export class NoisemeterPageModule {}

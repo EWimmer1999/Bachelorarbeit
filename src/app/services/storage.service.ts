@@ -30,4 +30,13 @@ export class StorageService {
       await this.storage.remove(key);
       return
   }
+
+  async keys(): Promise<string[]> {
+    return this.storage ? this.storage.keys() : [];
+  }
+
+  async clear(): Promise<void> {
+    await this.storage.clear(); 
+  }
+  
 }

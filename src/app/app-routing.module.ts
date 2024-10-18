@@ -6,6 +6,7 @@ import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.p
 import { CompletedSurveysPage } from './pages/surveys/completed-surveys/completed-surveys.page';
 import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
 import { SurveyDetailPage } from './pages/surveys/survey-detail/survey-detail.page';
+import { TippDetailPage } from './pages/tipp-detail/tipp-detail.page';
 
 
 const routes: Routes = [
@@ -13,11 +14,6 @@ const routes: Routes = [
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
-  },
-  {
-    path: 'about',
-    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule),
-    canActivate:[AuthGuard]
   },
   {
     path: 'login',
@@ -67,7 +63,20 @@ const routes: Routes = [
   },
   { path: 'survey/:id', component: SurveyDetailPage,
     canActivate:[AuthGuard]
-   }
+  },
+  { path: 'tipp/:id', component: TippDetailPage,
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'noisemeter',
+    loadChildren: () => import('./pages/data/noisemeter/noisemeter.module').then( m => m.NoisemeterPageModule)
+  },
+  {
+    path: 'tipp-detail',
+    loadChildren: () => import('./pages/tipp-detail/tipp-detail.module').then( m => m.TippDetailPageModule)
+  }
+
+
 
 ];
 

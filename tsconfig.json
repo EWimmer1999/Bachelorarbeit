@@ -24,7 +24,8 @@
     ],
     "useDefineForClassFields": false,
     "paths": {
-      "capacitor-stepcounter": ["../Plugin/capacitor-stepcounter/src"]
+      "capacitor-stepcounter": ["../Plugin/capacitor-stepcounter/src"],
+      "capacitor-noisemeter": ["../Plugin/capacitor-noisemeter/src"]
     }
   },
   "angularCompilerOptions": {
