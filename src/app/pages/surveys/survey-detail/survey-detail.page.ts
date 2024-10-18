@@ -17,7 +17,7 @@ export class SurveyDetailPage implements OnInit {
 
   steps: number = 0;
   interval: any;
-  noiseData: number[] = [];
+  noiseLevel: number[] = [];
   averageNoise: number = 0;
   currentDecibels: number = 0;
   noise: boolean = true;
@@ -58,7 +58,7 @@ export class SurveyDetailPage implements OnInit {
       this.currentDecibels = result.decibels;
       
       if (!isNaN(this.currentDecibels)) {
-        this.noiseData.push(this.currentDecibels);
+        this.noiseLevel.push(this.currentDecibels);
       } else {
         console.log('Ungültiger Geräuschpegel: ', this.currentDecibels);
       }
@@ -71,21 +71,21 @@ export class SurveyDetailPage implements OnInit {
     try {
       clearInterval(this.interval);
       await NoiseMeter.stop();
-      this.calculateAverageNoise();
-      this.saveAverageNoiseWithDate();
+      await this.calculateAverageNoise();
+      await this.saveAverageNoiseWithDate();
     } catch (error) {
       alert('Fehler beim Stoppen des NoiseMeters: ' + JSON.stringify(error));
     }
   }
 
   private calculateAverageNoise() {
-    if (this.noiseData.length === 0) {
-      this.averageNoise = 0; // Falls keine Daten vorhanden sind
+    if (this.noiseLevel.length === 0) {
+      this.averageNoise = 0;
       return;
     }
   
-    const sum = this.noiseData.reduce((acc, val) => acc + val, 0);
-    this.averageNoise = sum / this.noiseData.length;
+    const sum = this.noiseLevel.reduce((acc, val) => acc + val, 0);
+    this.averageNoise = sum / this.noiseLevel.length;
   }
   
 
@@ -95,7 +95,7 @@ export class SurveyDetailPage implements OnInit {
       date: date,
       averageNoise: this.averageNoise
     };
-  
+    console.log(this.averageNoise)
     console.log('Zu speichernde Daten:', this.savedData);
     await this.storageService.set(date, this.savedData);
     console.log('Gespeicherte Daten:', this.savedData);
@@ -130,29 +130,27 @@ export class SurveyDetailPage implements OnInit {
     }
   }
 
-  submitSurvey() {
-    this.stopNoiseMeter();
   
-    // Bereite die Antworten vor
+  async submitSurvey() {
+    await this.stopNoiseMeter();
+    console.log(this.averageNoise)
+  
     const responses = this.survey.questions.map((question: any) => {
       return {
         questionId: question.id,
-        // Konvertiere die Antwort in einen JSON-String
         answer: JSON.stringify(question.answer || question.options.filter((opt: any) => opt.selected))
       };
     });
-  
-    // Sende die Antworten zusammen mit dem gespeicherten Noise-Daten
-    this.updateService.sendAnswer(this.survey.id, responses, this.savedData)
+
+    this.updateService.sendAnswer(this.survey.id, responses, this.averageNoise)
       .then(() => {
         console.log('Survey submitted successfully');
-        
-        // Navigation zur Übersicht
         this.router.navigate(['overview-surveys']);
       })
       .catch((error) => {
         console.error('Error submitting survey:', error);
       });
   }
+
   
 }

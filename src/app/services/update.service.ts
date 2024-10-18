@@ -49,7 +49,8 @@ export class UpdateService {
     }
   }
 
-  async sendAnswer(surveyId: string, responses: any, noiseData: any) {
+
+  async sendAnswer(surveyId: string, responses: any, noiseLevel: any) {
     try {
 
       const token = await this.storageService.get('token');
@@ -60,7 +61,7 @@ export class UpdateService {
       const surveyAnswers = { 
         surveyId, 
         responses, 
-        noiseData 
+        noiseLevel 
       };
   
       const response = await lastValueFrom(this.http.post(`${this.url}/submit-survey`, surveyAnswers, { headers }));
