@@ -17,20 +17,14 @@ export class NewSurveysPage implements OnInit {
   constructor(private surveysService: SurveysService, private router: Router, private updateService: UpdateService) { }
 
   async ngOnInit() {
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
     
   }
 
   async ionViewWillEnter(){
     this.surveys = await this.surveysService.loadpendingSurveys();
     console.log('Loaded surveys from storage:', this.surveys);
-
-    try {
-      await this.updateService.getSurveys();
-      this.surveys = await this.surveysService.loadpendingSurveys();
-      console.log('Loaded surveys from server:', this.surveys);
-    } catch (error) {
-      console.error('Failed to fetch new tips, loading from storage:', error);
-    }
   }
 
 

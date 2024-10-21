@@ -48,8 +48,17 @@ export class SurveysService {
 
   async saveSurveyAnswers(answers: SurveyAnswer[]): Promise<void> {
     try {
-        console.log('Speichern der Antworten unter dem Schlüssel "completedSurveys":', answers);
-        await this.storage.set('completedSurveys', answers);
+        let existingSurveys = await this.storage.get('completedSurveys') || [];
+
+        answers.forEach((newAnswer) => {
+            existingSurveys = existingSurveys.filter((existingSurvey: SurveyAnswer) => existingSurvey.surveyId !== newAnswer.surveyId);
+        });
+
+        existingSurveys.push(...answers);
+
+        console.log('Speichern der Antworten unter dem Schlüssel "completedSurveys":', existingSurveys);
+        await this.storage.set('completedSurveys', existingSurveys);
+
         console.log('Antworten erfolgreich im lokalen Speicher abgelegt');
     } catch (error) {
         console.error('Fehler beim Speichern der Antworten im lokalen Speicher:', error);
@@ -58,11 +67,9 @@ export class SurveysService {
 
   async loadCompletedSurveys(): Promise<SurveyAnswer[]> {
     try {
-        // Lade die erledigten Umfragen aus dem lokalen Storage
         const completedSurveys = await this.storage.get('completedSurveys');
-        console.log('Laden der erledigten Umfragen:', completedSurveys); // Füge dies hinzu
+        console.log('Laden der erledigten Umfragen:', completedSurveys);
 
-        // Stelle sicher, dass die Daten als Array von SurveyAnswer zurückgegeben werden
         return completedSurveys ? (completedSurveys as SurveyAnswer[]) : [];
     } catch (error) {
         console.error('Fehler beim Laden der erledigten Umfragen:', error);
@@ -70,7 +77,12 @@ export class SurveysService {
     }
   }
 
+  async loadCachedCompletedSurveys(): Promise<SurveyAnswer[]> {
+    
+    const cachedSurveys = await this.storage.get('cached');
+    console.log('Laden der erledigten Umfragen:', cachedSurveys);
 
-
+    return cachedSurveys ? (cachedSurveys as SurveyAnswer[]) : [];
+  }
   
 }

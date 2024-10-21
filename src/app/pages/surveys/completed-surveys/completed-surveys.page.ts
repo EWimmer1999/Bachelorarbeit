@@ -12,6 +12,7 @@ import { UpdateService } from 'src/app/services/update.service';
 export class CompletedSurveysPage implements OnInit {
 
   completedSurveys: SurveyAnswer[] = [];
+  cachedCompletedSurveys: SurveyAnswer[] = [];
 
   constructor(
     private router: Router,
@@ -20,25 +21,17 @@ export class CompletedSurveysPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    try {
-      await this.updateService.getAnswers();
-      this.completedSurveys = await this.surveysService.loadCompletedSurveys();
-      console.log('Abgeschlossene Umfragen vom Server geladen:', this.completedSurveys);
-    } catch (error) {
-      console.error('Fehler beim Abrufen der abgeschlossenen Umfragen vom Server:', error);
-      this.completedSurveys = await this.surveysService.loadCompletedSurveys();
-      console.log('Abgeschlossene Umfragen aus dem lokalen Speicher geladen:', this.completedSurveys);
-    }
+
+    this.completedSurveys = await this.surveysService.loadCompletedSurveys();
+
+    this.cachedCompletedSurveys = await this.surveysService.loadCachedCompletedSurveys();
+
+    this.completedSurveys = [...this.completedSurveys, ...this.cachedCompletedSurveys];
+    
   }
 
-  async ionViewWillEnter() {
-    try {
-      await this.updateService.getAnswers();
-      this.completedSurveys = await this.surveysService.loadCompletedSurveys();
-      console.log('Abgeschlossene Umfragen erneut geladen:', this.completedSurveys);
-    } catch (error) {
-      console.error('Fehler beim erneuten Abrufen der Umfragen:', error);
-    }
+  ionViewWillEnter(){
+    this.updateService.updateApp()
   }
 
   viewSurveyDetail(surveyId: number) {

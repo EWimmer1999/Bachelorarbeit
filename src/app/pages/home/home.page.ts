@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StepCounter } from 'capacitor-stepcounter';
 import { NoiseMeter } from 'capacitor-noisemeter';
 import { StorageService } from 'src/app/services/storage.service';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-home',
@@ -20,16 +21,21 @@ export class HomePage implements OnInit, OnDestroy {
 
   isMeasuring: boolean = false;
 
-  constructor(private storage: StorageService) {} // Storage injizieren
+  constructor(private storage: StorageService, private updateService: UpdateService) {} // Storage injizieren
 
   async ngOnInit() {
-    await this.storage.initStorage(); // Storage initialisieren
+    await this.storage.initStorage();
     await this.startStepCounter();
     this.updateStepCount();
 
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
+    
+  }
+
+  ionViewWillEnter(){
+    this.updateService.updateApp()
   }
 
   async ionViewDidLeave() {
@@ -37,6 +43,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.stopNoiseMeter()
       this.noised = false;
     }
+
   }
 
   async toggleNoiseMeter() {

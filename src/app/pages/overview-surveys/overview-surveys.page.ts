@@ -15,8 +15,15 @@ export class OverviewSurveysPage implements OnInit {
 
   constructor(private updateService: UpdateService, private surveysService: SurveysService) {}
 
-  ngOnInit() {
-   
+  async ngOnInit() {
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
+    
+  }
+
+  async ionViewWillEnter(){
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
   }
 
   

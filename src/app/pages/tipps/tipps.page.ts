@@ -22,13 +22,6 @@ export class TippsPage {
     this.tipps = await this.tippsService.loadTipps();
     console.log('Loaded tipps from storage:', this.tipps);
     
-    try {
-      await this.updateService.getTipps();
-      this.tipps = await this.tippsService.loadTipps();
-      console.log('Loaded tipps from server:', this.tipps);
-    } catch (error) {
-      console.error('Failed to fetch new tips, loading from storage:', error);
-    }
   }
 
   viewTippDetail(tippId: number) {

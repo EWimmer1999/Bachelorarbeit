@@ -33,6 +33,7 @@
     "@ionic/storage-angular": "^4.0.0-next.4",
     "@swimlane/ngx-charts": "^20.5.0",
     "@types/swiper": "^6.0.0",
+    "capacitor-foregroundservice": "file:../Plugin/capacitor-foregroundservice/capacitor-foregroundservice",
     "capacitor-noisemeter": "file:../Plugin/capacitor-noisemeter",
     "capacitor-stepcounter": "file:../Plugin/capacitor-stepcounter",
     "chart.js": "^4.4.5",

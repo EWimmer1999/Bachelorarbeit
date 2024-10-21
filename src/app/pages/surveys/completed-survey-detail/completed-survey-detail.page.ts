@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SurveyAnswer } from 'src/app/services/data.service';
 import { SurveysService } from 'src/app/services/surveys.service';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-completed-survey-detail',
@@ -14,14 +15,19 @@ export class CompletedSurveyDetailPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private surveysService: SurveysService
+    private surveysService: SurveysService,
+    private updateService: UpdateService
   ) {}
 
   async ngOnInit() {
-    const surveyIdParam = this.route.snapshot.paramMap.get('id'); // Hier 'id' anstelle von 'surveyId'
-    this.surveyId = surveyIdParam ? Number(surveyIdParam) : undefined; // Umwandlung in number
+    const surveyIdParam = this.route.snapshot.paramMap.get('id');
+    this.surveyId = surveyIdParam ? Number(surveyIdParam) : undefined;
     console.log('Gesuchte Umfrage-ID:', this.surveyId);
     await this.loadSurveyDetails();
+  }
+
+  ionViewWillEnter(){
+    this.updateService.updateApp()
   }
 
   async loadSurveyDetails() {

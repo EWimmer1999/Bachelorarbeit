@@ -21,7 +21,6 @@ export class StorageService {
 
   async get(key: string) {
     const value = await this.storage.get(key); 
-
     return value;
   }
 

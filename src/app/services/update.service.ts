@@ -42,13 +42,9 @@ export class UpdateService {
       console.log(response)
   
       if (response) {
-        const completedSurveys = response.filter(survey => survey.completed);
-
         const pendingSurveys = response.filter(survey => !survey.completed);
   
         await this.surveysService.clearSurveys();
-  
-        await this.surveysService.saveSurveys(completedSurveys, 'completed');
         
         await this.surveysService.saveSurveys(pendingSurveys, 'pending');
   
@@ -61,11 +57,8 @@ export class UpdateService {
     }
   }
   
-  async sendAnswer(surveyId: string, responses: any, noiseLevel: any) {
+  async sendAnswer(surveyId: string, responses: any, noiseLevel: any): Promise<boolean> {
     try {
-
-      var completed = true;
-
       const token = await this.storageService.get('token');
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`
@@ -75,22 +68,21 @@ export class UpdateService {
         surveyId, 
         responses, 
         noiseLevel,
-        completed
+        completed: true
       };
   
       const response = await lastValueFrom(this.http.post(`${this.url}/submit-survey`, surveyAnswers, { headers }));
-  
+      
       console.log('Survey answers submitted successfully:', response);
+      return true;
     } catch (error) {
-      if (error instanceof HttpErrorResponse) {
-        console.error('Failed to upload answers!', error.error);
-      }
+      console.error('Failed to upload answers!', error);
+      return false; 
     }
   }
 
 
   async getTipps(): Promise<void> {
-
     try {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${await this.storageService.get('token')}`
@@ -137,4 +129,53 @@ export class UpdateService {
     }
   }
   
+
+  async sendCachedAnswers(): Promise<void> {
+    const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
+    
+    if (cachedAnswers.length === 0) {
+      console.log('Keine zwischengespeicherten Antworten gefunden.');
+      return; 
+    }
+  
+    for (const cachedAnswer of cachedAnswers) {
+      const { surveyId, responses, noiseLevel } = cachedAnswer;
+      
+  
+      const success = await this.sendAnswer(surveyId, responses, noiseLevel);
+  
+      if (success) {
+        console.log('Antworten wurden erfolgreich gesendet.');
+        await this.deleteCachedAnswer(surveyId);
+      } else {
+        console.error('Antworten konnten nicht gesendet werden.');
+      }
+    }
+  }
+      
+  private async deleteCachedAnswer(surveyId: string): Promise<void> {
+    let pendingSurveys = await this.storageService.get('pendingAnswers') || [];
+  
+    pendingSurveys = pendingSurveys.filter((s: any) => s.survey.id !== surveyId);
+  
+    await this.storageService.set('pendingAnswers', pendingSurveys);
+    console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
+  }
+
+  async updateApp(): Promise<void> {
+
+    const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
+
+    if (cachedAnswers.length > 0) {
+      await this.sendCachedAnswers();
+      await this.getSurveys();
+      await this.getAnswers();
+    } else {
+      await this.getSurveys();
+      await this.getAnswers();
+    }   
+    await this.getTipps();           
+    console.log("Updated")
+  }
+
 }
