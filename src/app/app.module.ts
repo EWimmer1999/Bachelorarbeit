@@ -8,7 +8,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import {provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
 import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
 import { SurveyDetailPage } from './pages/surveys/survey-detail/survey-detail.page';

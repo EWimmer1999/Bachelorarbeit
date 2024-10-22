@@ -3,6 +3,7 @@ import { StepCounter } from 'capacitor-stepcounter';
 import { NoiseMeter } from 'capacitor-noisemeter';
 import { StorageService } from 'src/app/services/storage.service';
 import { UpdateService } from 'src/app/services/update.service';
+import { Foregroundservice } from 'capacitor-foregroundservice';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,9 @@ export class HomePage implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
+
     
+    Foregroundservice.startService();
   }
 
   ionViewWillEnter(){
