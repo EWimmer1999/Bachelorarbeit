@@ -155,12 +155,13 @@ export class UpdateService {
       
   private async deleteCachedAnswer(surveyId: string): Promise<void> {
     let pendingSurveys = await this.storageService.get('pendingAnswers') || [];
-  
-    pendingSurveys = pendingSurveys.filter((s: any) => s.survey.id !== surveyId);
-  
+
+    pendingSurveys = pendingSurveys.filter((s: any) => s?.survey?.id !== surveyId);
+
     await this.storageService.set('pendingAnswers', pendingSurveys);
     console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
-  }
+}
+
 
   async updateApp(): Promise<void> {
 
