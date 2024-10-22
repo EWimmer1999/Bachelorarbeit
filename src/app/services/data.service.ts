@@ -36,6 +36,23 @@ export interface Tipp {
   flavour: string,
   text: string
 }
+
+
+export interface DiaryEntry {
+  id: number;
+  date: string; // ISO-Format
+  time: string; // Uhrzeit im Format 'HH:mm'
+  foodCategory: string;
+  additionalInfo: string;
+  emotions: string;
+  activities: {
+    happy: boolean;
+    excited: boolean;
+    sad: boolean;
+  };
+  stressLevel: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })

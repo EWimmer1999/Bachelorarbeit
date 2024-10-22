@@ -82,7 +82,16 @@ const routes: Routes = [
   {
     path: 'completed-survey-detail',
     loadChildren: () => import('./pages/surveys/completed-survey-detail/completed-survey-detail.module').then( m => m.CompletedSurveyDetailPageModule)
+  },
+  {
+    path: 'diary',
+    loadChildren: () => import('./pages/diary/diary/diary.module').then( m => m.DiaryPageModule)
+  },
+  {
+    path: 'new-diary',
+    loadChildren: () => import('./pages/diary/new-diary/new-diary.module').then( m => m.NewDiaryPageModule)
   }
+
 
 ];
 

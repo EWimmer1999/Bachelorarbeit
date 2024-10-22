@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Diary
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Diary</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Datumsauswahl mit Pfeilen -->
+  <div class="date-navigation">
+    <ion-button (click)="changeDate(-1)">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <ion-label>{{ selectedDate | date: 'yyyy-MM-dd' }}</ion-label>
+    <ion-button (click)="changeDate(1)">
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Button zum Hinzufügen eines neuen Eintrags -->
+  <ion-button expand="block" routerLink="/new-diary">
+    Neuen Eintrag hinzufügen
+  </ion-button>
+
+  <!-- Liste der Einträge für den ausgewählten Tag -->
+  <ion-list>
+    <ion-item *ngFor="let entry of filteredEntries">
+      <ion-label>
+        <h2>{{ entry.date | date }}</h2>
+        <p>{{ entry.foodCategory }}</p>
+        <p>{{ entry.additionalInfo }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
