@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { DiaryEntry } from './data.service';
+import { UpdateService } from './update.service';
 
 @Injectable({
   providedIn: 'root',
@@ -43,20 +44,15 @@ export class DiaryService {
       await this.storage.set('diaryEntries', this.diaryEntries);
     }
   
-    // Füge den aktualisierten Eintrag der scheduledEntries-Liste hinzu
     let scheduledEntries = await this.storage.get('scheduledEntries') || [];
     
-    // Überprüfe, ob der Eintrag bereits in scheduledEntries vorhanden ist
     const scheduledIndex = scheduledEntries.findIndex((entry: DiaryEntry) => entry.entryId === updatedEntry.entryId);
     if (scheduledIndex !== -1) {
-      // Aktualisiere den vorhandenen Eintrag
       scheduledEntries[scheduledIndex] = updatedEntry;
     } else {
-      // Füge den neuen Eintrag hinzu
       scheduledEntries.push(updatedEntry);
     }
     
-    // Speichere die aktualisierte scheduledEntries-Liste
     await this.storage.set('scheduledEntries', scheduledEntries);
     console.log('Eintrag der scheduledEntries-Liste hinzugefügt:', updatedEntry.entryId);
   }
@@ -73,24 +69,19 @@ export class DiaryService {
   
 
   async deleteDiaryEntry(entryId: number) {
-    // Lade die Liste der Tagebucheinträge
     let diaryEntries = await this.storage.get('diaryEntries') || [];
 
-    // Finde den zu löschenden Eintrag
     const entryToDelete = diaryEntries.find((entry: DiaryEntry) => entry.entryId === entryId);
     if (!entryToDelete) {
         console.error('Eintrag zum Löschen nicht gefunden:', entryId);
         return;
     }
 
-    // Entferne den Eintrag aus der diaryEntries-Liste
     diaryEntries = diaryEntries.filter((entry: DiaryEntry) => entry.entryId !== entryId);
     await this.storage.set('diaryEntries', diaryEntries);
 
-    // Setze das deleted-Flag auf true
     entryToDelete.deleted = true;
 
-    // Füge den Eintrag zur Liste der scheduledEntries hinzu
     let scheduledEntries = await this.storage.get('scheduledEntries') || [];
     scheduledEntries.push(entryToDelete);
     const updateScheduled = await this.storage.set('scheduledEntries', scheduledEntries);
@@ -102,4 +93,24 @@ export class DiaryService {
     }
   }
 
+
+  saveEntries(entries: DiaryEntry[]) {
+    // Iteriere über die übergebenen Einträge
+    entries.forEach((newEntry) => {
+      const existingIndex = this.diaryEntries.findIndex(entry => entry.entryId === newEntry.entryId);
+  
+      if (existingIndex !== -1) {
+        // Wenn der Eintrag bereits existiert, überschreibe ihn
+        this.diaryEntries[existingIndex] = newEntry;
+      } else {
+        // Andernfalls füge den neuen Eintrag hinzu
+        this.diaryEntries.push(newEntry);
+      }
+    });
+  
+    // Optional: Speichere die aktualisierten Einträge in der lokalen Speicherung
+    this.storage.set('diaryEntries', this.diaryEntries);
+    console.log('Tagebucheinträge wurden gespeichert:', this.diaryEntries);
+  }
+  
 }

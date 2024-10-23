@@ -7,6 +7,7 @@ import { TippsService } from './tipps.service';
 import { DiaryEntry, Survey, SurveyAnswer, Tipp } from './data.service';
 import { serverUrl } from 'src/environments/environment';
 import { AuthService } from './authentication.service';
+import { DiaryService } from './diary.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,15 @@ export class UpdateService {
 
   private answerUrl = `${this.url}/user-surveys`;
 
+  private diaryUrl = `${this.url}/diary-entries`;
+
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
     private surveysService: SurveysService,
     private tippsService: TippsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private diaryService: DiaryService
   ) {}
 
   async getSurveys(): Promise<void> {
@@ -201,7 +205,6 @@ export class UpdateService {
   private async deleteCachedDiary(entryId: number): Promise<void> {
     let pendingDiaries = await this.storageService.get('scheduledEntries') || [];
 
-    // Annahme: pendingDiaries enthält direkt Objekte vom Typ DiaryEntry
     pendingDiaries = pendingDiaries.filter((entry: DiaryEntry) => entry.entryId !== entryId);
 
     const test = await this.storageService.set('scheduledEntries', pendingDiaries);
@@ -230,4 +233,37 @@ export class UpdateService {
     await this.getTipps();           
     console.log("Updated")
   }
+
+
+  async getDiaries(): Promise<void> {
+
+    const scheduledEntries = await this.storageService.get('scheduledEntries') || []
+
+    if (scheduledEntries.length > 0) {
+      console.log('Es gibt geplante Einträge. Die Serverabfrage wird abgebrochen.');
+      this.sendCachedDiary();
+    }
+  
+    try {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${await this.storageService.get('token')}`
+      });
+
+      console.log(headers)
+  
+      const response: DiaryEntry[] = await lastValueFrom(
+        this.http.get<DiaryEntry[]>(this.diaryUrl, { headers })
+      );
+  
+      console.log('Erhaltene Antworten vom Server:', response);
+  
+      if (response && response.length > 0) {
+        await this.diaryService.saveEntries(response);
+        console.log('Antworten erfolgreich lokal gespeichert');
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Antworten:', error);
+    }
+  }
+
 }

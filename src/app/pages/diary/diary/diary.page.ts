@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DiaryService } from 'src/app/services/diary.service';
 import { DiaryEntry } from 'src/app/services/data.service';
 import { Router } from '@angular/router';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-diary',
@@ -13,7 +14,11 @@ export class DiaryPage implements OnInit {
   filteredEntries: DiaryEntry[] = [];
   selectedDate: string = new Date().toISOString().slice(0,10);
 
-  constructor(private diaryService: DiaryService, private router: Router) {}
+  constructor(
+    private diaryService: DiaryService, 
+    private router: Router,
+    private updateService: UpdateService
+  ) {}
 
   async ngOnInit() {
     await this.loadDiaryEntries();
@@ -42,6 +47,10 @@ export class DiaryPage implements OnInit {
 
   openEntryDetail(entry: DiaryEntry) {
     this.router.navigate(['detail', entry.entryId]);
+  }
+
+  syncServer(){
+    this.updateService.getDiaries();
   }
 }
 
