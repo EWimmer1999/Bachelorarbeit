@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
 import { TippsService } from './tipps.service';
-import { Survey, SurveyAnswer, Tipp } from './data.service';
+import { DiaryEntry, Survey, SurveyAnswer, Tipp } from './data.service';
 import { serverUrl } from 'src/environments/environment';
 import { AuthService } from './authentication.service';
 
@@ -160,8 +160,25 @@ export class UpdateService {
 
     await this.storageService.set('pendingAnswers', pendingSurveys);
     console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
-}
+  }
 
+  async sendDiary(entry: DiaryEntry) {
+ 
+    try {
+      const token = await this.storageService.get('token');
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+  
+      const response = await lastValueFrom(this.http.post(`${this.url}/diary-entry`, entry, { headers }));
+      
+      console.log('Diary answer submitted successfully:', response);
+      return true;
+    } catch (error) {
+      console.error('Failed to upload answers!', error);
+      return false; 
+    }
+  }
 
   async updateApp(): Promise<void> {
 
@@ -178,5 +195,8 @@ export class UpdateService {
     await this.getTipps();           
     console.log("Updated")
   }
+
+
+
 
 }

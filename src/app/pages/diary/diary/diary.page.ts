@@ -25,7 +25,6 @@ export class DiaryPage implements OnInit {
     this.filterEntries(); 
   }
 
-  
   filterEntries() {
     console.log('All diary entries:', this.diaryEntries);
     this.filteredEntries = this.diaryEntries.filter(
@@ -42,8 +41,7 @@ export class DiaryPage implements OnInit {
   }
 
   openEntryDetail(entry: DiaryEntry) {
-    this.router.navigate(['detail', entry.id]);
+    this.router.navigate(['detail', entry.entryId]);
   }
-
 }
 

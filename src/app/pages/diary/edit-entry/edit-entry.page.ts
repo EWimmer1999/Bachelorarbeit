@@ -11,8 +11,8 @@ import { DiaryService } from 'src/app/services/diary.service';
 export class EditEntryPage implements OnInit {
   selectedDate: string = ''; // Datum im ISO-Format
   selectedTime: string = ''; // Uhrzeit im Format 'HH:mm'
-  additionalInfo: string = '';
-  emotions: string = '';
+  information: string = '';
+  notes: string = '';
   activity1: boolean = false;
   activity2: boolean = false;
   activity3: boolean = false;
@@ -38,8 +38,8 @@ export class EditEntryPage implements OnInit {
     if (entry) {
       this.selectedDate = entry.date;
       this.selectedTime = entry.time;
-      this.additionalInfo = entry.additionalInfo;
-      this.emotions = entry.emotions;
+      this.information = entry.information;
+      this.notes = entry.notes;
       this.activity1 = entry.activities.happy;
       this.activity2 = entry.activities.excited;
       this.activity3 = entry.activities.sad;
@@ -74,12 +74,12 @@ export class EditEntryPage implements OnInit {
 
   async saveEntry() {
     const updatedEntry: DiaryEntry = {
-      id: this.entryId,
+      entryId: this.entryId,
       date: this.selectedDate,
       time: this.selectedTime,
       foodCategory: this.foodCategory,
-      additionalInfo: this.additionalInfo,
-      emotions: this.emotions,
+      information: this.information,
+      notes: this.notes,
       stressLevel: this.stressLevel,
       activities: {
         happy: this.activity1,

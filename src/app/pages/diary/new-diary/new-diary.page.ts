@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DiaryEntry } from 'src/app/services/data.service';
 import { DiaryService } from 'src/app/services/diary.service';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-new-diary',
@@ -15,15 +16,15 @@ export class NewDiaryPage {
   showTimePicker: boolean = false;
   tempDate: string = this.selectedDate;
   tempTime: string = this.selectedTime;
-  additionalInfo: string = '';
-  emotions: string = '';
+  information: string = '';
+  notes: string = '';
   activity1: boolean = false;
   activity2: boolean = false;
   activity3: boolean = false;
   stressLevel: number = 1;
   foodCategory: any;
 
-  constructor(private diaryService: DiaryService, private router: Router) {}
+  constructor(private diaryService: DiaryService, private router: Router, private updateService: UpdateService) {}
 
   openDateCalendar() {
     this.showDatePicker = true;
@@ -53,14 +54,13 @@ export class NewDiaryPage {
   
 
   async saveEntry() {
-    const formattedDate = this.selectedDate;
     const entry: DiaryEntry = {
-      id: new Date().getTime(),
+      entryId: new Date().getTime(),
       date: this.selectedDate.slice(0,10),
       time: this.selectedTime.slice(11,16),
       foodCategory: this.foodCategory,
-      additionalInfo: this.additionalInfo,
-      emotions: this.emotions,
+      information: this.information,
+      notes: this.notes,
       stressLevel: this.stressLevel,
       activities: {
         happy: this.activity1,
@@ -69,8 +69,14 @@ export class NewDiaryPage {
       },
     };
 
-    await this.diaryService.saveDiaryEntry(entry);
-    console.log('Tagebucheintrag gespeichert:', entry);
+    const success = await this.updateService.sendDiary(entry);
+
+    if (success) {
+      await this.diaryService.saveDiaryEntry(entry);
+    } else {
+      await this.diaryService.prepareUpload(entry);
+    }
+
     this.router.navigate(['diary']);
   }
 }

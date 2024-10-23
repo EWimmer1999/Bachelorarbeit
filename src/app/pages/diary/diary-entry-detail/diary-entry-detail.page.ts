@@ -14,15 +14,13 @@ export class DiaryEntryDetailPage implements OnInit {
   time: string | undefined;
   formattedTime: any; 
   
-
   constructor(private route: ActivatedRoute, private diaryService: DiaryService, private router: Router) {}
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.entry = this.diaryService.getDiaryEntries().find(entry => entry.id === this.id);
+    this.entry = this.diaryService.getDiaryEntries().find(entry => entry.entryId === this.id);
     const [hours, minutes] = this.entry?.time.split(':') || [];
     this.formattedTime = `${hours}:${minutes}`;
-    
   }
 
   editEntry() {

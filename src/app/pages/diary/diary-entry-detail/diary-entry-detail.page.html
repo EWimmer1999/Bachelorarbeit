@@ -14,10 +14,10 @@
     </ion-card-header>
     <ion-card-content>
       <p><strong>Food Category:</strong> {{ entry.foodCategory }}</p>
-      <p><strong>Additional Info:</strong> {{ entry.additionalInfo }}</p>
-      <p><strong>Emotions:</strong> {{ entry.emotions }}</p>
+      <p><strong>Additional Info:</strong> {{ entry.information }}</p>
+      <p><strong>Notes:</strong> {{ entry.notes }}</p>
       <p><strong>Stress Level:</strong> {{ entry.stressLevel }}</p>
-      <p><strong>Activities:</strong></p>
+      <p><strong>Emotions:</strong></p>
       <ul>
         <li *ngIf="entry.activities.happy">Happy</li>
         <li *ngIf="entry.activities.excited">Excited</li>
@@ -26,6 +26,5 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Button zum Bearbeiten des Eintrags -->
   <ion-button expand="full" (click)="editEntry()">Eintrag bearbeiten</ion-button>
 </ion-content>

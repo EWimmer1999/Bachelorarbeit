@@ -27,7 +27,7 @@ export class DiaryService {
   }
 
   async getDiaryEntry(id: number): Promise<DiaryEntry | undefined> {
-    return this.diaryEntries.find(entry => entry.id === id);
+    return this.diaryEntries.find(entry => entry.entryId === id);
   }
 
   async saveDiaryEntry(entry: DiaryEntry) {
@@ -36,10 +36,15 @@ export class DiaryService {
   }
 
   async updateDiaryEntry(updatedEntry: DiaryEntry): Promise<void> {
-    const index = this.diaryEntries.findIndex(entry => entry.id === updatedEntry.id);
+    const index = this.diaryEntries.findIndex(entry => entry.entryId === updatedEntry.entryId);
     if (index !== -1) {
       this.diaryEntries[index] = updatedEntry; 
       await this.storage.set('diaryEntries', this.diaryEntries);
     }
+  }
+
+  async prepareUpload(entry: DiaryEntry) {
+    this.diaryEntries.push(entry);
+    await this.storage.set('scheduledEntries', this.diaryEntries);
   }
 }

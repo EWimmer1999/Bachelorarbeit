@@ -16,7 +16,6 @@
     </ion-toolbar>
   </ion-header>
 
-  <!-- Datumsauswahl mit Pfeilen -->
   <div class="date-navigation">
     <ion-button (click)="changeDate(-1)">
       <ion-icon name="arrow-back-outline"></ion-icon>
@@ -27,18 +26,16 @@
     </ion-button>
   </div>
 
-  <!-- Button zum Hinzufügen eines neuen Eintrags -->
   <ion-button expand="block" routerLink="/new-diary">
     Neuen Eintrag hinzufügen
   </ion-button>
 
-  <!-- Liste der Einträge für den ausgewählten Tag -->
   <ion-list>
     <ion-item *ngFor="let entry of filteredEntries" (click)="openEntryDetail(entry)">
       <ion-label>
-        <h2>{{ entry.date | date }}</h2>
+        <h2>{{ entry.time }}</h2>
         <p>{{ entry.foodCategory }}</p>
-        <p>{{ entry.additionalInfo }}</p>
+        <p>{{ entry.information }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

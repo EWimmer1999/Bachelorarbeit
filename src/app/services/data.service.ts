@@ -39,12 +39,12 @@ export interface Tipp {
 
 
 export interface DiaryEntry {
-  id: number;
+  entryId: number;
   date: string; 
   time: string; 
   foodCategory: string;
-  additionalInfo: string;
-  emotions: string;
+  information: string;
+  notes: string;
   activities: {
     happy: boolean;
     excited: boolean;
