@@ -90,9 +90,15 @@ const routes: Routes = [
   {
     path: 'new-diary',
     loadChildren: () => import('./pages/diary/new-diary/new-diary.module').then( m => m.NewDiaryPageModule)
+  },
+  {
+    path: 'detail/:id',
+    loadChildren: () => import('./pages/diary/diary-entry-detail/diary-entry-detail.module').then( m => m.DiaryEntryDetailPageModule)
+  },
+  {
+    path: 'edit-entry/:id',
+    loadChildren: () => import('./pages/diary/edit-entry/edit-entry.module').then( m => m.EditEntryPageModule)
   }
-
-
 ];
 
 @NgModule({

@@ -40,8 +40,8 @@ export interface Tipp {
 
 export interface DiaryEntry {
   id: number;
-  date: string; // ISO-Format
-  time: string; // Uhrzeit im Format 'HH:mm'
+  date: string; 
+  time: string; 
   foodCategory: string;
   additionalInfo: string;
   emotions: string;

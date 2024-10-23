@@ -9,12 +9,12 @@ import { DiaryService } from 'src/app/services/diary.service';
   styleUrls: ['./new-diary.page.scss'],
 })
 export class NewDiaryPage {
-  selectedDate: Date = new Date() 
-  selectedTime: Date = new Date()
+  selectedDate: string = new Date().toISOString(); 
+  selectedTime: string = new Date().toISOString();
   showDatePicker: boolean = false;
   showTimePicker: boolean = false;
-  tempDate: string = this.selectedDate.toISOString();
-  tempTime: string = this.selectedTime.toISOString();
+  tempDate: string = this.selectedDate;
+  tempTime: string = this.selectedTime;
   additionalInfo: string = '';
   emotions: string = '';
   activity1: boolean = false;
@@ -42,12 +42,12 @@ export class NewDiaryPage {
   }
 
   confirmDateChange() {
-    this.selectedDate = new Date(this.tempDate); // Setze das ausgewählte Datum
+    this.selectedDate = this.tempDate;
     this.closeCalendar();
   }
   
   confirmTimeChange() {
-    this.selectedTime = new Date(this.tempTime); // Setze die ausgewählte Zeit
+    this.selectedTime = this.tempTime;
     this.closeTimePicker();
   }
   
@@ -56,8 +56,8 @@ export class NewDiaryPage {
     const formattedDate = this.selectedDate;
     const entry: DiaryEntry = {
       id: new Date().getTime(),
-      date: this.selectedDate.toDateString(),
-      time: this.selectedTime.toString(),
+      date: this.selectedDate.slice(0,10),
+      time: this.selectedTime.slice(11,16),
       foodCategory: this.foodCategory,
       additionalInfo: this.additionalInfo,
       emotions: this.emotions,

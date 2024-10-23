@@ -34,7 +34,7 @@
 
   <!-- Liste der Einträge für den ausgewählten Tag -->
   <ion-list>
-    <ion-item *ngFor="let entry of filteredEntries">
+    <ion-item *ngFor="let entry of filteredEntries" (click)="openEntryDetail(entry)">
       <ion-label>
         <h2>{{ entry.date | date }}</h2>
         <p>{{ entry.foodCategory }}</p>
