@@ -51,6 +51,7 @@ export interface DiaryEntry {
     sad: boolean;
   };
   stressLevel: number;
+  deleted: boolean;
 }
 
 @Injectable({

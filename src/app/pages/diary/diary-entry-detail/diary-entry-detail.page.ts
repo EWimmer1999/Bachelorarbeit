@@ -10,7 +10,7 @@ import { DiaryEntry } from 'src/app/services/data.service';
 })
 export class DiaryEntryDetailPage implements OnInit {
   entry: DiaryEntry | undefined;
-  id: number | undefined;
+  id: number = 0;
   time: string | undefined;
   formattedTime: any; 
   
@@ -24,6 +24,10 @@ export class DiaryEntryDetailPage implements OnInit {
   }
 
   editEntry() {
-    this.router.navigate(['edit-entry', this.id])
+    this.router.navigate(['edit-entry', this.id]);
+  }
+
+  async deleteEntry() {
+    await this.diaryService.deleteDiaryEntry(this.id);
   }
 }

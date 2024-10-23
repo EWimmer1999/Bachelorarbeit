@@ -86,6 +86,7 @@ export class EditEntryPage implements OnInit {
         excited: this.activity2,
         sad: this.activity3,
       },
+      deleted: false,
     };
 
     console.log(updatedEntry);

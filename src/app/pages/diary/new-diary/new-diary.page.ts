@@ -67,6 +67,7 @@ export class NewDiaryPage {
         excited: this.activity2,
         sad: this.activity3,
       },
+      deleted: false,
     };
 
     const success = await this.updateService.sendDiary(entry);
@@ -74,6 +75,7 @@ export class NewDiaryPage {
     if (success) {
       await this.diaryService.saveDiaryEntry(entry);
     } else {
+      await this.diaryService.saveDiaryEntry(entry);
       await this.diaryService.prepareUpload(entry);
     }
 

@@ -44,7 +44,43 @@ export class DiaryService {
   }
 
   async prepareUpload(entry: DiaryEntry) {
+    this.diaryEntries = await this.storage.get('scheduledEntries') || [];
+
     this.diaryEntries.push(entry);
+
     await this.storage.set('scheduledEntries', this.diaryEntries);
+    console.log('Eintrag vorbereitet für Upload:', entry);
   }
+  
+
+  async deleteDiaryEntry(entryId: number) {
+    // Lade die Liste der Tagebucheinträge
+    let diaryEntries = await this.storage.get('diaryEntries') || [];
+
+    // Finde den zu löschenden Eintrag
+    const entryToDelete = diaryEntries.find((entry: DiaryEntry) => entry.entryId === entryId);
+    if (!entryToDelete) {
+        console.error('Eintrag zum Löschen nicht gefunden:', entryId);
+        return;
+    }
+
+    // Entferne den Eintrag aus der diaryEntries-Liste
+    diaryEntries = diaryEntries.filter((entry: DiaryEntry) => entry.entryId !== entryId);
+    await this.storage.set('diaryEntries', diaryEntries);
+
+    // Setze das deleted-Flag auf true
+    entryToDelete.deleted = true;
+
+    // Füge den Eintrag zur Liste der scheduledEntries hinzu
+    let scheduledEntries = await this.storage.get('scheduledEntries') || [];
+    scheduledEntries.push(entryToDelete);
+    const updateScheduled = await this.storage.set('scheduledEntries', scheduledEntries);
+
+    if (updateScheduled) {
+        console.log('Eintrag wurde als gelöscht markiert und zur scheduledEntries-Liste hinzugefügt:', entryId);
+    } else {
+        console.error('Fehler beim Hinzufügen des Eintrags zu scheduledEntries:', entryId);
+    }
+  }
+
 }

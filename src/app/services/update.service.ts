@@ -81,7 +81,6 @@ export class UpdateService {
     }
   }
 
-
   async getTipps(): Promise<void> {
     try {
       const headers = new HttpHeaders({
@@ -104,7 +103,6 @@ export class UpdateService {
       console.error('Error fetching tipps:', error);
     }
   }
-
 
   async getAnswers(): Promise<void> {
     try {
@@ -129,7 +127,6 @@ export class UpdateService {
     }
   }
   
-
   async sendCachedAnswers(): Promise<void> {
     const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
     
@@ -180,6 +177,43 @@ export class UpdateService {
     }
   }
 
+  async sendCachedDiary(): Promise<void> {
+    const cachedDiaries = await this.storageService.get('scheduledEntries') || [];
+    
+    if (cachedDiaries.length === 0) {
+      console.log('Keine zwischengespeicherten Einträge gefunden.');
+      return; 
+    }
+  
+    for (const cachedDiary of cachedDiaries) {
+     
+      const success = await this.sendDiary(cachedDiary);
+  
+      if (success) {
+        console.log('Antworten wurden erfolgreich gesendet.');
+        await this.deleteCachedDiary(cachedDiary.entryId);
+      } else {
+        console.error('Antworten konnten nicht gesendet werden.');
+      }
+    }
+  }
+      
+  private async deleteCachedDiary(entryId: number): Promise<void> {
+    let pendingDiaries = await this.storageService.get('scheduledEntries') || [];
+
+    // Annahme: pendingDiaries enthält direkt Objekte vom Typ DiaryEntry
+    pendingDiaries = pendingDiaries.filter((entry: DiaryEntry) => entry.entryId !== entryId);
+
+    const test = await this.storageService.set('scheduledEntries', pendingDiaries);
+
+    if (test) {
+        console.log('Zwischengespeicherter Eintrag gelöscht:', entryId);
+    } else {
+        console.error('Fehler beim Löschen des zwischengespeicherten Eintrags:', entryId);
+    }
+}
+
+
   async updateApp(): Promise<void> {
 
     const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
@@ -191,12 +225,9 @@ export class UpdateService {
     } else {
       await this.getSurveys();
       await this.getAnswers();
+      await this.sendCachedDiary()
     }   
     await this.getTipps();           
     console.log("Updated")
   }
-
-
-
-
 }
