@@ -36,12 +36,31 @@ export class DiaryService {
   }
 
   async updateDiaryEntry(updatedEntry: DiaryEntry): Promise<void> {
+  
     const index = this.diaryEntries.findIndex(entry => entry.entryId === updatedEntry.entryId);
     if (index !== -1) {
       this.diaryEntries[index] = updatedEntry; 
       await this.storage.set('diaryEntries', this.diaryEntries);
     }
+  
+    // Füge den aktualisierten Eintrag der scheduledEntries-Liste hinzu
+    let scheduledEntries = await this.storage.get('scheduledEntries') || [];
+    
+    // Überprüfe, ob der Eintrag bereits in scheduledEntries vorhanden ist
+    const scheduledIndex = scheduledEntries.findIndex((entry: DiaryEntry) => entry.entryId === updatedEntry.entryId);
+    if (scheduledIndex !== -1) {
+      // Aktualisiere den vorhandenen Eintrag
+      scheduledEntries[scheduledIndex] = updatedEntry;
+    } else {
+      // Füge den neuen Eintrag hinzu
+      scheduledEntries.push(updatedEntry);
+    }
+    
+    // Speichere die aktualisierte scheduledEntries-Liste
+    await this.storage.set('scheduledEntries', scheduledEntries);
+    console.log('Eintrag der scheduledEntries-Liste hinzugefügt:', updatedEntry.entryId);
   }
+  
 
   async prepareUpload(entry: DiaryEntry) {
     this.diaryEntries = await this.storage.get('scheduledEntries') || [];
