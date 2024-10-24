@@ -54,6 +54,12 @@ export interface DiaryEntry {
   deleted: boolean;
 }
 
+export interface Settings {
+  darkMode: string;
+  noiseData: string;
+  stepData: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })

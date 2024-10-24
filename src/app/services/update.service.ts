@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
 import { TippsService } from './tipps.service';
-import { DiaryEntry, Survey, SurveyAnswer, Tipp } from './data.service';
+import { DiaryEntry, Survey, SurveyAnswer, Tipp, Settings } from './data.service';
 import { serverUrl } from 'src/environments/environment';
 import { AuthService } from './authentication.service';
 import { DiaryService } from './diary.service';
@@ -214,25 +214,32 @@ export class UpdateService {
     } else {
         console.error('Fehler beim Löschen des zwischengespeicherten Eintrags:', entryId);
     }
-}
-
+  }
 
   async updateApp(): Promise<void> {
 
     const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
+    const cachedEntries = await this.storageService.get('scheduledEntries') || [];
+    const settings = await this.storageService.get('settings') || {};
 
     if (cachedAnswers.length > 0) {
       await this.sendCachedAnswers();
-      await this.getSurveys();
-      await this.getAnswers();
-    } else {
-      await this.getSurveys();
-      await this.getAnswers();
-      await this.sendCachedDiary()
-    }   
+    }    
+
+    if (cachedEntries.length > 0) {
+      await this.sendCachedDiary();
+    }
+
+    if (Object.keys(settings).length > 0) {
+      await this.saveSettings();
+    }
+
+    await this.getSurveys();
+    await this.getAnswers();
     await this.getTipps();           
-    console.log("Updated")
+    console.log("Updated");
   }
+
 
 
   async getDiaries(): Promise<void> {
@@ -289,6 +296,52 @@ export class UpdateService {
       return { success: false, errorCode };
     }
   }
-  
 
+
+  async saveSettings(): Promise<void> {
+    console.log("Trying to update settings")
+    try {
+      const settings = await this.storageService.get('settings') || [];
+      const token = await this.storageService.get('token');
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+
+      const response = await lastValueFrom(
+        this.http.post(`${this.url}/save-settings`, { settings }, { headers })
+      );
+
+      console.log('Einstellungen erfolgreich gespeichert:', response);
+      await this.storageService.remove('settings')
+
+    } catch (error) {
+      console.error('Fehler beim Speichern der Einstellungen:', error);
+    }
+  }
+
+  async getSettings(): Promise<Settings | null> {
+    try {
+      const token = await this.storageService.get('token');
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+  
+      const response = await lastValueFrom(
+        this.http.get<Settings>(`${this.url}/get-settings`, { headers })
+      );
+  
+      console.log('Erhaltene Einstellungen vom Server:', response);
+      
+      if (response) {
+        await this.storageService.set('darkModeActivated', response.darkMode.toString());
+        await this.storageService.set('noiseDataActivated', response.noiseData.toString());
+        await this.storageService.set('stepDataActivated', response.stepData.toString());
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Einstellungen:', error);
+      return null;
+    }
+  }
 }

@@ -36,11 +36,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
+    await this.updateService.getSettings();
     this.themeService.applyTheme();
-
   }
 
   ionViewWillEnter(){
+    this.themeService.applyTheme();
     this.updateService.updateApp()
   }
 

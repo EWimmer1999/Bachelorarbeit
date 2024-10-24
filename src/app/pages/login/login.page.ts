@@ -32,6 +32,7 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.themeService.applyTheme();
     this.clearFields()
   }
 

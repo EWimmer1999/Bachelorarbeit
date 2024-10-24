@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button (click)="navigateProfile()"></ion-back-button>
     </ion-buttons>
     <ion-title>
       Einstellungen
@@ -45,7 +45,5 @@
     <ion-item>
       <ion-button color="dark" fill="clear" size="full" routerLink="/change-pw">Change password</ion-button>
     </ion-item>
-
-
   </ion-list>
 </ion-content>

@@ -20,10 +20,12 @@ export class TippsPage implements OnInit{
     private themeService: ThemeService
   ) {}
 
-  ngOnInit() {
-    this.themeService.applyTheme();
+  async ngOnInit() {
+    await this.themeService.applyTheme();
   }
+
   async ionViewWillEnter(){
+    this.themeService.applyTheme();
     this.tipps = await this.tippsService.loadTipps();
     console.log('Loaded tipps from storage:', this.tipps);
     
