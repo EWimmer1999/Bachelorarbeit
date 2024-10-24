@@ -11,24 +11,20 @@ import { UpdateService } from 'src/app/services/update.service';
 })
 export class OverviewSurveysPage implements OnInit {
 
-  surveys: Survey[] = [];  // Array zum Speichern der Umfragen
+  surveys: Survey[] = [];
 
   constructor(private updateService: UpdateService, private surveysService: SurveysService) {}
 
-  ngOnInit() {
-    this.loadSurveys();
+  async ngOnInit() {
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
+    
   }
 
-  refresh(ev: RefresherCustomEvent) {
-    setTimeout(async () => {
-      await this.loadSurveys();  // Stelle sicher, dass Umfragen beim Refresh neu geladen werden
-      (ev as RefresherCustomEvent).detail.complete();
-    }, 3000);
+  async ionViewWillEnter(){
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
   }
 
-  async loadSurveys() {
-    await this.updateService.getSurveys();  // Daten abrufen und speichern
-    this.surveys = await this.surveysService.loadSurveys();  // Daten aus dem Speicher laden
-    console.log('Loaded surveys:', this.surveys);  // Ausgabe zur Überprüfung
-  }
+  
 }
