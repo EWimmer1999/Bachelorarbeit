@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
@@ -265,5 +265,30 @@ export class UpdateService {
       console.error('Fehler beim Abrufen der Antworten:', error);
     }
   }
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; errorCode?: number }> {
+    try {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${await this.storageService.get('token')}`
+      });
+  
+      const passwords = { 
+        currentPassword,
+        newPassword
+      };
+  
+      const response = await lastValueFrom(this.http.post(`${this.url}/change-password`, passwords, { headers }));
+      
+      console.log('Changed password successfully:', response);
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to change password!', error);
+      
+      const errorCode = (error instanceof HttpErrorResponse) ? error.status : 500;
+      
+      return { success: false, errorCode };
+    }
+  }
+  
 
 }

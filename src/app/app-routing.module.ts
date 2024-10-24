@@ -98,7 +98,11 @@ const routes: Routes = [
   {
     path: 'edit-entry/:id',
     loadChildren: () => import('./pages/diary/edit-entry/edit-entry.module').then( m => m.EditEntryPageModule)
+  },  {
+    path: 'change-pw',
+    loadChildren: () => import('./pages/change-pw/change-pw.module').then( m => m.ChangePWPageModule)
   }
+
 ];
 
 @NgModule({
