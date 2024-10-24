@@ -10,16 +10,15 @@
 </ion-header>
 
 
-<ion-content [fullscreen]="true">
-  <ion-refresher slot="fixed">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+<ion-content>
+  <div class="flex-center">
+    <ion-card>
+      <ion-buttons>
+        <ion-toggle [checked]="darkMode" (ionChange) = "toggleDarkMode()">
+          
+        </ion-toggle>
+      </ion-buttons>
+    </ion-card>
+  </div>
   
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">
-        Inbox
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
 </ion-content>
