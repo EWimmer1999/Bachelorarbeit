@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SurveyAnswer } from 'src/app/services/data.service';
 import { SurveysService } from 'src/app/services/surveys.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class CompletedSurveyDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private surveysService: SurveysService,
-    private updateService: UpdateService
+    private updateService: UpdateService,
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
@@ -24,6 +26,7 @@ export class CompletedSurveyDetailPage implements OnInit {
     this.surveyId = surveyIdParam ? Number(surveyIdParam) : undefined;
     console.log('Gesuchte Umfrage-ID:', this.surveyId);
     await this.loadSurveyDetails();
+    this.themeService.applyTheme();
   }
 
   ionViewWillEnter(){

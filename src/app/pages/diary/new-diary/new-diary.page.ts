@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DiaryEntry } from 'src/app/services/data.service';
 import { DiaryService } from 'src/app/services/diary.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { UpdateService } from 'src/app/services/update.service';
   templateUrl: './new-diary.page.html',
   styleUrls: ['./new-diary.page.scss'],
 })
-export class NewDiaryPage {
+export class NewDiaryPage implements OnInit {
   selectedDate: string = new Date().toISOString(); 
   selectedTime: string = new Date().toISOString();
   showDatePicker: boolean = false;
@@ -24,8 +25,16 @@ export class NewDiaryPage {
   stressLevel: number = 1;
   foodCategory: any;
 
-  constructor(private diaryService: DiaryService, private router: Router, private updateService: UpdateService) {}
-
+  constructor(
+    private diaryService: DiaryService, 
+    private router: Router, 
+    private updateService: UpdateService,
+    private themeService: ThemeService
+  ) {}
+  
+  ngOnInit() {
+    this.themeService.applyTheme();
+  }
   openDateCalendar() {
     this.showDatePicker = true;
   }

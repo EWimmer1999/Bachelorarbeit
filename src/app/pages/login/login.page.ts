@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/authentication.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -19,13 +20,19 @@ export class LoginPage implements OnInit {
 
   form!: FormGroup;
 
-  constructor(private router: Router, private http: HttpClient, 
-    private cdr: ChangeDetectorRef, private authService: AuthService, private alertController: AlertController) { }
+  constructor(
+    private router: Router,  
+    private authService: AuthService, 
+    private alertController: AlertController,
+    private themeService: ThemeService
+  ) { }
 
   ngOnInit() {
+    this.themeService.applyTheme();
   }
 
   ionViewWillEnter() {
+    this.themeService.applyTheme();
     this.clearFields()
   }
 

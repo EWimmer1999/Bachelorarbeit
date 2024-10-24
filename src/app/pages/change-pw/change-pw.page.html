@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Passwort ändern
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-input label="Old password" labelPlacement="floating" placeholder="Old password" type="password" [(ngModel)]="currentPassword" required></ion-input>
+    </ion-item>
+
+    <ion-item [class.invalid]="passwordMismatch">
+      <ion-input label="New password" labelPlacement="floating" placeholder="New password" type="password" [(ngModel)]="newPassword" required></ion-input>
+    </ion-item>
+
+    <ion-item [class.invalid]="passwordMismatch">
+      <ion-input label="New password" labelPlacement="floating" placeholder="New password" type="password" [(ngModel)]="confirmNewPassword" required></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="changePassword()">
+    Passwort ändern
+  </ion-button>
+</ion-content>

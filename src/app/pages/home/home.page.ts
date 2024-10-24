@@ -3,7 +3,7 @@ import { StepCounter } from 'capacitor-stepcounter';
 import { NoiseMeter } from 'capacitor-noisemeter';
 import { StorageService } from 'src/app/services/storage.service';
 import { UpdateService } from 'src/app/services/update.service';
-import { Foregroundservice } from 'capacitor-foregroundservice';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +22,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   isMeasuring: boolean = false;
 
-  constructor(private storage: StorageService, private updateService: UpdateService) {} // Storage injizieren
+  constructor(
+    private storage: StorageService, 
+    private updateService: UpdateService,
+    private themeService: ThemeService
+  ) {} 
 
   async ngOnInit() {
     await this.storage.initStorage();
@@ -32,12 +36,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.updateStepCount();
     }, 5000);
-
-    
-    Foregroundservice.startService();
+    await this.updateService.getSettings();
+    this.themeService.applyTheme();
   }
 
   ionViewWillEnter(){
+    this.themeService.applyTheme();
     this.updateService.updateApp()
   }
 
