@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Saved Noisemeter
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <h2>Noisemeter data of today:</h2>
+    <canvas #todayCanvas></canvas>
+
+    <h2>Average noise level of the past 7 days:</h2>
+    <canvas #lineCanvas></canvas>
+  </div>
+</ion-content>

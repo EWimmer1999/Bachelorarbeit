@@ -21,7 +21,6 @@ export class StorageService {
 
   async get(key: string) {
     const value = await this.storage.get(key); 
-
     return value;
   }
 
@@ -30,4 +29,13 @@ export class StorageService {
       await this.storage.remove(key);
       return
   }
+
+  async keys(): Promise<string[]> {
+    return this.storage ? this.storage.keys() : [];
+  }
+
+  async clear(): Promise<void> {
+    await this.storage.clear(); 
+  }
+  
 }
