@@ -1,5 +1,6 @@
 // theme.service.ts
 import { Injectable } from '@angular/core';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,19 +8,19 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
   private darkMode: boolean = false;
 
-  constructor() {
+  constructor(private storage: StorageService) {
     this.loadTheme();
   }
 
-  loadTheme() {
-    const storedTheme = localStorage.getItem('darkModeActivated');
-    this.darkMode = storedTheme === 'true';
+  async loadTheme() {
+    const storedTheme = await this.storage.get('darkModeActivated');
+    this.darkMode = storedTheme === "true";
     this.applyTheme();
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
-    localStorage.setItem('darkModeActivated', this.darkMode.toString());
+    this.storage.set('darkModeActivated', this.darkMode.toString());
     this.applyTheme();
   }
 

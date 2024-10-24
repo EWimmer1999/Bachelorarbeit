@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,31 +12,33 @@ export class SettingsPage implements OnInit {
   noiseData = false;
   stepData = false;
 
-  constructor() { }
+  constructor(
+    private storage: StorageService
+  ) { }
 
   ngOnInit() {
     this.checkMode();
   }
 
-  checkMode() {
-    const checkMode = localStorage.getItem('darkModeActivated');
-    this.darkMode = checkMode === 'true'; // Setze direkt den Wert
-    document.body.classList.toggle('dark', this.darkMode); // Wende die Klasse sofort an
+  async checkMode() {
+    const checkMode = await this.storage.get('darkModeActivated');
+    this.darkMode = checkMode === "true";
+    document.body.classList.toggle('dark', this.darkMode);
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
-    localStorage.setItem('darkModeActivated', this.darkMode.toString()); // Verwende toString für einfache Speicherung
+    this.storage.set('darkModeActivated', this.darkMode.toString()); // Verwende toString für einfache Speicherung
   }
 
   toggleNoiseData() {
     this.noiseData = !this.noiseData;
-    localStorage.setItem('noiseDataActivated', this.noiseData.toString());
+    this.storage.set('noiseDataActivated', this.noiseData.toString());
   }
 
   toggleStepData() {
     this.stepData = !this.stepData;
-    localStorage.setItem('stepDataActivated', this.stepData.toString());
+    this.storage.set('stepDataActivated', this.stepData.toString());
   }
 }
