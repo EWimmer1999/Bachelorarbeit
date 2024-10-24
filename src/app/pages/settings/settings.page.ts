@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class SettingsPage implements OnInit {
 
   darkMode = false;
+  noiseData = false;
+  stepData = false;
 
   constructor() { }
 
@@ -34,5 +36,27 @@ export class SettingsPage implements OnInit {
       localStorage.setItem('darkModeActivated', 'false');
     }
   }
+
+  toggleNoiseData(){
+    this.noiseData = !this.noiseData;
+    if(this.noiseData) {
+      localStorage.setItem('noiseDataActivated', 'true');
+
+    }else {
+      localStorage.setItem('noiseDataActivated', 'false');
+    }
+  }
+
+  toggleStepData(){
+    this.stepData = !this.stepData;
+    if(this.stepData) {
+      localStorage.setItem('stepDataActivated', 'true');
+
+    }else {
+      localStorage.setItem('stepDataActivated', 'false');
+    }
+  }
+
+ 
 
 }
