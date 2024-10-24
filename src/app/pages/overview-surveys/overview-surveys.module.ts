@@ -8,6 +8,7 @@ import { OverviewSurveysPageRoutingModule } from './overview-surveys-routing.mod
 
 import { OverviewSurveysPage } from './overview-surveys.page';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +16,6 @@ import { OverviewSurveysPage } from './overview-surveys.page';
     IonicModule,
     OverviewSurveysPageRoutingModule
   ],
-  declarations: [OverviewSurveysPage]
+  declarations: []
 })
 export class OverviewSurveysPageModule {}

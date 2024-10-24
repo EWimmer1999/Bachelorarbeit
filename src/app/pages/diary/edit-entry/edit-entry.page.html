@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Eintrag bearbeiten</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-item>
+      <ion-select label="Food category" label-placement="floating" [(ngModel)]="foodCategory">
+        <ion-select-option value="breakfast">Breakfast</ion-select-option>
+        <ion-select-option value="lunch">Lunch</ion-select-option>
+        <ion-select-option value="dinner">Dinner</ion-select-option>
+        <ion-select-option value="snack">Snack</ion-select-option>
+      </ion-select>
+    </ion-item>    
+
+    <ion-item>
+      <ion-label position="floating">Food information</ion-label>
+      <ion-input [(ngModel)]="information"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Additional notes</ion-label>
+      <ion-input [(ngModel)]="notes"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Stresslevel: {{ stressLevel }}</ion-label>
+      <ion-range [(ngModel)]="stressLevel" min="1" max="10" step="1" snaps="true"></ion-range>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Emotions</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-checkbox slot="start" [(ngModel)]="activity1">Happy</ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-checkbox slot="start" [(ngModel)]="activity2">Excited</ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-checkbox slot="start" [(ngModel)]="activity3">Sad</ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>{{ selectedDate | date: 'dd.MM.yyyy' }}</ion-label>
+      <ion-button slot="end" (click)="openDateCalendar()">
+        Datum ändern
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Uhrzeit: {{ selectedTime }}</ion-label>
+      <ion-button slot="end" (click)="openTimePicker()">
+        Uhrzeit ändern
+      </ion-button>
+    </ion-item>
+
+    <ion-button expand="block" (click)="saveEntry()">Speichern</ion-button>
+  </ion-card>
+
+  <ion-modal [isOpen]="showDatePicker" (ionModalDidDismiss)="closeCalendar()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Datum auswählen</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeCalendar()">Schließen</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-datetime
+          presentation="date"
+          [(ngModel)]="selectedDate">
+        </ion-datetime>
+        <ion-button expand="block" (click)="confirmDateChange()">Fertig</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="showTimePicker" (ionModalDidDismiss)="closeTimePicker()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Uhrzeit auswählen</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeTimePicker()">Schließen</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-datetime
+          presentation="time"
+          [(ngModel)]="selectedTime"
+          displayFormat="HH:mm">
+        </ion-datetime>
+        <ion-button expand="block" (click)="confirmTimeChange()">Fertig</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

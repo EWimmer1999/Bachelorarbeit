@@ -9,12 +9,11 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content [fullscreen]="true">
   <ion-refresher slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">
@@ -22,4 +21,46 @@
       </ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Aktuelle Schrittanzahl</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2>{{ steps }}</h2>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-button expand="full" (click)="updateStepCount()">
+    Schritte aktualisieren
+  </ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Aktueller Geräuschpegel</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2 *ngIf="currentDecibels !== undefined">{{ currentDecibels.toFixed(2) }} dB</h2>
+      <h2 *ngIf="currentDecibels === undefined">Geräuschpegel nicht verfügbar</h2>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-button expand="full" (click)="toggleNoiseMeter()">
+    {{ isMeasuring ? 'Stop' : 'Start' }}
+  </ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Durchschnittlicher Geräuschpegel</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2>{{ averageNoise }} dB</h2>
+    </ion-card-content>
+    <ion-button expand="full" routerLink="/noisemeter">Details</ion-button>
+  </ion-card>
+
+  <ion-card>
+    <ion-button routerLink="/diary">Go to diary</ion-button>
+  </ion-card>
+  
 </ion-content>

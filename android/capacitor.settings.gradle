@@ -13,3 +13,12 @@ project(':capacitor-keyboard').projectDir = new File('../node_modules/@capacitor
 
 include ':capacitor-status-bar'
 project(':capacitor-status-bar').projectDir = new File('../node_modules/@capacitor/status-bar/android')
+
+include ':capacitor-foregroundservice'
+project(':capacitor-foregroundservice').projectDir = new File('../../Plugin/capacitor-foregroundservice/android')
+
+include ':capacitor-noisemeter'
+project(':capacitor-noisemeter').projectDir = new File('../../Plugin/capacitor-noisemeter/android')
+
+include ':capacitor-stepcounter'
+project(':capacitor-stepcounter').projectDir = new File('../../Plugin/capacitor-stepcounter/android')

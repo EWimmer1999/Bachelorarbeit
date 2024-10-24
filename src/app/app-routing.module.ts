@@ -3,31 +3,18 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginGuard } from './guards/login.guard';
 import { AuthGuard } from './guards/authentication.guard';
 import { OverviewSurveysPage } from './pages/overview-surveys/overview-surveys.page';
+import { CompletedSurveysPage } from './pages/surveys/completed-surveys/completed-surveys.page';
+import { NewSurveysPage } from './pages/surveys/new-surveys/new-surveys.page';
+import { SurveyDetailPage } from './pages/surveys/survey-detail/survey-detail.page';
+import { TippDetailPage } from './pages/tipp-detail/tipp-detail.page';
+import { CompletedSurveyDetailPage } from './pages/surveys/completed-survey-detail/completed-survey-detail.page';
+
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
-    canActivate:[AuthGuard]
-  },
-  {
-    path: 'message/:id',
-    loadChildren: () => import('./view-message/view-message.module').then( m => m.ViewMessagePageModule)
-  },
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
-  },
-  {
-    path: 'about',
-    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule),
-    canActivate:[AuthGuard]
-  },
-  {
-    path: 'contact',
-    loadChildren: () => import('./contact/contact.module').then( m => m.ContactPageModule),
-    canActivate:[AuthGuard]
   },
   {
     path: 'login',
@@ -65,30 +52,53 @@ const routes: Routes = [
     canActivate:[LoginGuard]
   },
   {
-    path: 'overview-surveys',
-    component: OverviewSurveysPage,
-    children: [
-      {
-        path: 'current-surveys',
-        loadChildren: () => import('./pages/current-surveys/current-surveys.module').then(m => m.CurrentSurveysPageModule)
-      },
-      {
-        path: 'completed-surveys',
-        loadChildren: () => import('./pages/completed-surveys/completed-surveys.module').then(m => m.CompletedSurveysPageModule)
-      },
-      {
-        path: '',
-        redirectTo: 'current-surveys',
-        pathMatch: 'full'
-      }
-    ],
+    path: 'new-surveys',
+    loadChildren: () => import('./pages/surveys/new-surveys/new-surveys.module').then( m => m.NewSurveysPageModule)
+  },
+  { path: 'overview-surveys', component: OverviewSurveysPage, children: [
+    { path: '', pathMatch: 'full', redirectTo: 'new'},
+    { path: 'completed', component: CompletedSurveysPage },
+    { path: 'new', component: NewSurveysPage }
+  ],
+    canActivate:[AuthGuard]
+  },
+  { path: 'survey/:id', component: SurveyDetailPage,
+    canActivate:[AuthGuard]
+  },
+  { path: 'completesurvey/:id', component: CompletedSurveyDetailPage,
+    canActivate:[AuthGuard]
+  },
+  { path: 'tipp/:id', component: TippDetailPage,
     canActivate:[AuthGuard]
   },
   {
-    path: 'overview-surveys',
-    loadChildren: () => import('./pages/overview-surveys/overview-surveys.module').then( m => m.OverviewSurveysPageModule)
+    path: 'noisemeter',
+    loadChildren: () => import('./pages/data/noisemeter/noisemeter.module').then( m => m.NoisemeterPageModule)
   },
-
+  {
+    path: 'tipp-detail',
+    loadChildren: () => import('./pages/tipp-detail/tipp-detail.module').then( m => m.TippDetailPageModule)
+  },
+  {
+    path: 'completed-survey-detail',
+    loadChildren: () => import('./pages/surveys/completed-survey-detail/completed-survey-detail.module').then( m => m.CompletedSurveyDetailPageModule)
+  },
+  {
+    path: 'diary',
+    loadChildren: () => import('./pages/diary/diary/diary.module').then( m => m.DiaryPageModule)
+  },
+  {
+    path: 'new-diary',
+    loadChildren: () => import('./pages/diary/new-diary/new-diary.module').then( m => m.NewDiaryPageModule)
+  },
+  {
+    path: 'detail/:id',
+    loadChildren: () => import('./pages/diary/diary-entry-detail/diary-entry-detail.module').then( m => m.DiaryEntryDetailPageModule)
+  },
+  {
+    path: 'edit-entry/:id',
+    loadChildren: () => import('./pages/diary/edit-entry/edit-entry.module').then( m => m.EditEntryPageModule)
+  }
 ];
 
 @NgModule({
