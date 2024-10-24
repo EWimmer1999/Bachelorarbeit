@@ -1,3 +1,27 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" *ngIf="showMenu">
+    <ion-content>
+      <ion-list>
+        <!-- Profilbereich -->
+        <ion-item lines="none" routerLink="/profile" (click)="closeMenu()" style="height: 10rem;">
+          <div class="profile-container" style="display: flex; align-items: center;">
+            <ion-avatar class="profile-avatar" style="width: 6rem; height: 6rem;">
+              <img src="https://www.wwf.de/fileadmin/_processed_/3/7/csm_leopard-massai-mara-kenia-WW22416-c-naturepl-com-Anup-Shah-WWF_79b7762679.jpg" alt="Profile Picture">
+            </ion-avatar>
+            <ion-label class="profile-info" style="margin-left: 1.5rem;">
+              <h2 style="font-size: 1.5rem;">Placeholdername</h2>
+            </ion-label>
+          </div>
+        </ion-item>
+
+        <!-- Menüoptionen -->
+        <ion-item routerLink="/home" (click)="closeMenu()">Home</ion-item>
+        <ion-item routerLink="/overview-surveys" (click)="closeMenu()">Surveys</ion-item>
+        <ion-item routerLink="/tipps" (click)="closeMenu()">Tipps & Tricks</ion-item>
+        <ion-button color="success" size="full" (click)="logout()">Logout</ion-button>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>
