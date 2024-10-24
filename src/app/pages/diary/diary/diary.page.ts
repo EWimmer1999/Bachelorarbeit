@@ -3,6 +3,7 @@ import { DiaryService } from 'src/app/services/diary.service';
 import { DiaryEntry } from 'src/app/services/data.service';
 import { Router } from '@angular/router';
 import { UpdateService } from 'src/app/services/update.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-diary',
@@ -17,11 +18,13 @@ export class DiaryPage implements OnInit {
   constructor(
     private diaryService: DiaryService, 
     private router: Router,
-    private updateService: UpdateService
+    private updateService: UpdateService,
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
     await this.loadDiaryEntries();
+    this.themeService.applyTheme();
   }
 
   async loadDiaryEntries() {

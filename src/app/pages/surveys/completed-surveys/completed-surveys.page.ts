@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SurveyAnswer } from 'src/app/services/data.service';
 import { SurveysService } from 'src/app/services/surveys.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class CompletedSurveysPage implements OnInit {
   constructor(
     private router: Router,
     private surveysService: SurveysService,
-    private updateService: UpdateService
+    private updateService: UpdateService,
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
@@ -28,6 +30,7 @@ export class CompletedSurveysPage implements OnInit {
 
     this.completedSurveys = [...this.completedSurveys, ...this.cachedCompletedSurveys];
     
+    this.themeService.applyTheme();
   }
 
   ionViewWillEnter(){

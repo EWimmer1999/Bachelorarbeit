@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfilePage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private themeService: ThemeService
+  ) { }
 
   ngOnInit() {
+    this.themeService.applyTheme();
   }
 
 

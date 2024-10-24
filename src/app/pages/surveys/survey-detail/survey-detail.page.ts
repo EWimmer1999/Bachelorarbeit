@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { NoiseMeter } from 'capacitor-noisemeter';
 import { Survey, SurveyAnswer } from 'src/app/services/data.service';
 import { NavController } from '@ionic/angular';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-survey-detail',
@@ -31,12 +32,13 @@ export class SurveyDetailPage implements OnInit {
     private updateService: UpdateService,
     private storageService: StorageService,
     private router: Router,
-    private navController: NavController
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
     const surveyId = +this.route.snapshot.paramMap.get('id')!;
     this.survey = (await this.surveysService.loadpendingSurveys()).find(s => s.id === surveyId) || null;
+    this.themeService.applyTheme();
   }
 
   async ionViewDidEnter() {

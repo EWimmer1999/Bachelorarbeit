@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DiaryEntry } from 'src/app/services/data.service';
 import { DiaryService } from 'src/app/services/diary.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-edit-entry',
   templateUrl: './edit-entry.page.html',
   styleUrls: ['./edit-entry.page.scss'],
 })
+
 export class EditEntryPage implements OnInit {
   selectedDate: string = ''; // Datum im ISO-Format
   selectedTime: string = ''; // Uhrzeit im Format 'HH:mm'
@@ -25,12 +27,14 @@ export class EditEntryPage implements OnInit {
   constructor(
     private diaryService: DiaryService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
     this.entryId = +this.route.snapshot.paramMap.get('id')!;
     this.loadEntry();
+    this.themeService.applyTheme();
   }
 
   async loadEntry() {

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/authentication.service';
 import { AlertController } from '@ionic/angular';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-reset-pw',
@@ -16,9 +17,16 @@ export class ResetPwPage implements OnInit {
   password: string = '';
   registrationError: string | null = null; 
 
-  constructor(private router: Router, private http: HttpClient, private authService: AuthService, private alertController: AlertController) { }
+  constructor(
+    private router: Router, 
+    private authService: AuthService, 
+    private alertController: AlertController,
+    private themeService: ThemeService
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.themeService.applyTheme();
+   }
 
   sendEmail(){
     const postData = {

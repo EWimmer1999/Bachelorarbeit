@@ -15,48 +15,27 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     this.checkMode();
-    
   }
 
   checkMode() {
     const checkMode = localStorage.getItem('darkModeActivated');
-    checkMode == 'true'
-    ? (this.darkMode = true)
-    : (this.darkMode = false);
-    document.body.classList.toggle('dark', this.darkMode);
+    this.darkMode = checkMode === 'true'; // Setze direkt den Wert
+    document.body.classList.toggle('dark', this.darkMode); // Wende die Klasse sofort an
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
-    if(this.darkMode) {
-      localStorage.setItem('darkModeActivated', 'true');
-
-    }else {
-      localStorage.setItem('darkModeActivated', 'false');
-    }
+    localStorage.setItem('darkModeActivated', this.darkMode.toString()); // Verwende toString für einfache Speicherung
   }
 
-  toggleNoiseData(){
+  toggleNoiseData() {
     this.noiseData = !this.noiseData;
-    if(this.noiseData) {
-      localStorage.setItem('noiseDataActivated', 'true');
-
-    }else {
-      localStorage.setItem('noiseDataActivated', 'false');
-    }
+    localStorage.setItem('noiseDataActivated', this.noiseData.toString());
   }
 
-  toggleStepData(){
+  toggleStepData() {
     this.stepData = !this.stepData;
-    if(this.stepData) {
-      localStorage.setItem('stepDataActivated', 'true');
-
-    }else {
-      localStorage.setItem('stepDataActivated', 'false');
-    }
+    localStorage.setItem('stepDataActivated', this.stepData.toString());
   }
-
- 
-
 }

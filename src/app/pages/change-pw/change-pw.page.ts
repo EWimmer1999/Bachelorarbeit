@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UpdateService } from 'src/app/services/update.service';
 import { AlertController } from '@ionic/angular';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-change-pw',
   templateUrl: './change-pw.page.html',
   styleUrls: ['./change-pw.page.scss'],
 })
-export class ChangePWPage {
+
+export class ChangePWPage implements OnInit{
 
   currentPassword: string = '';
   newPassword: string = '';
@@ -18,9 +20,14 @@ export class ChangePWPage {
   constructor(
     private updateService: UpdateService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private themeService: ThemeService
   ) {}
 
+  ngOnInit() {
+    this.themeService.applyTheme();
+  }
+  
   async changePassword() {
     this.passwordMismatch = this.newPassword !== this.confirmNewPassword;
     
