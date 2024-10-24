@@ -5,7 +5,7 @@ export interface Survey {
   title: string;
   description?: string;
   questions: Question[];
-  isCompleted?: boolean; 
+  completed?: string; 
 }
 
 export interface Question {
@@ -16,14 +16,52 @@ export interface Question {
   answer?: string | string[]; // Benutzerantworten, Typ hängt vom Fragetyp ab
 }
 
+export interface SurveyAnswer {
+  surveyId: number;
+  surveyTitle: string;
+  surveyDescription: string;
+  completed: boolean;
+  noiseLevel: number;
+  questions: {
+    questionId: number;
+    questionText: string;
+    questionType: string;
+    answer: string | null;
+  }[];
+}
+
+export interface Tipp {
+  id: number;
+  title: string,
+  flavour: string,
+  text: string
+}
+
+
+export interface DiaryEntry {
+  entryId: number;
+  date: string; 
+  time: string; 
+  foodCategory: string;
+  information: string;
+  notes: string;
+  activities: {
+    happy: boolean;
+    excited: boolean;
+    sad: boolean;
+  };
+  stressLevel: number;
+  deleted: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class DataService {
-  // Dein Service-Code hier
 
   getSurveys(): Survey[] {
-    // Beispiel-Daten, die im Service bereitgestellt werden könnten
     return [
       {
         id: 1,
@@ -32,8 +70,19 @@ export class DataService {
         questions: [
          
         ],
-        isCompleted: true
+        completed: 'true'
       }
     ];
+  }
+
+  getTipps(): Tipp[] {
+    return [
+      {
+        id: 1,
+        title: 'TestTipp',
+        flavour: 'This is a flavour text',
+        text: 'This is a very long test text',
+      }
+    ]
   }
 }

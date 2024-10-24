@@ -20,6 +20,20 @@
       <ion-title size="large">
         Inbox
       </ion-title>
+
     </ion-toolbar>
   </ion-header>
+
+
+  <ion-content>
+    <ion-list>
+      <ion-item *ngFor="let tipp of tipps" (click)="viewTippDetail(tipp.id)">
+        <ion-label>
+          <div><strong>{{ tipp.title }}</strong></div>
+          <div>{{ tipp.flavour }}</div>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
 </ion-content>

@@ -14,19 +14,19 @@ export class NewSurveysPage implements OnInit {
 
   surveys: Survey[] = [];
 
-  constructor(private surveysService: SurveysService, private router: Router) { }
+  constructor(private surveysService: SurveysService, private router: Router, private updateService: UpdateService) { }
 
   async ngOnInit() {
-    const allSurveys = await this.surveysService.loadSurveys();
-    this.surveys = allSurveys.filter(survey => !survey.isCompleted);
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
+    
   }
 
-  async startSurvey(survey: Survey) {
-    // Logik zum Starten der Umfrage
-    // Setze die Umfrage nach Abschluss auf abgeschlossen
-    await this.surveysService.markSurveyAsCompleted(survey);
-    this.surveys = this.surveys.filter(s => s.id !== survey.id);  // Entferne die Umfrage aus der Liste der neuen Umfragen
+  async ionViewWillEnter(){
+    this.surveys = await this.surveysService.loadpendingSurveys();
+    console.log('Loaded surveys from storage:', this.surveys);
   }
+
 
   viewSurveyDetail(surveyId: number) {
     this.router.navigate([`/survey/${surveyId}`]);

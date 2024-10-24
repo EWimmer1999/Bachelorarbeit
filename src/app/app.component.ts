@@ -4,7 +4,6 @@ import { MenuController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/authentication.service';
 import { SurveysService } from './services/surveys.service';
-import { StepCounterService } from './services/stepcounter.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +14,7 @@ export class AppComponent implements OnInit {
   showMenu = true;
 
   constructor(private router: Router, private menu: MenuController, private authService: AuthService,
-    private surveysService: SurveysService, private StepCounter: StepCounterService
+    private surveysService: SurveysService
   ) {}
 
   ngOnInit() {

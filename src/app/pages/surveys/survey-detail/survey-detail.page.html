@@ -25,7 +25,6 @@
               </ion-item>
               
               <ion-item *ngSwitchCase="'single-choice'">
-                
                 <ion-radio-group [(ngModel)]="question.answer">
                   <ion-item *ngFor="let option of question.options">
                     <ion-label>{{ option }}</ion-label>
