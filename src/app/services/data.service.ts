@@ -36,6 +36,24 @@ export interface Tipp {
   flavour: string,
   text: string
 }
+
+
+export interface DiaryEntry {
+  entryId: number;
+  date: string; 
+  time: string; 
+  foodCategory: string;
+  information: string;
+  notes: string;
+  activities: {
+    happy: boolean;
+    excited: boolean;
+    sad: boolean;
+  };
+  stressLevel: number;
+  deleted: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })

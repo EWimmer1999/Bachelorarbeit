@@ -90,7 +90,6 @@ export class SurveyDetailPage implements OnInit {
     this.averageNoise = sum / this.noiseLevel.length;
   }
   
-
   private async saveAverageNoiseWithDate() {
     const date = new Date().toISOString();
     this.savedData = {
@@ -153,8 +152,7 @@ export class SurveyDetailPage implements OnInit {
       await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
       await this.deleteSurvey(this.survey.id);
     }
-    this.navController.navigateBack([`/overview-surveys`]);
-    //this.router.navigate([`/overview-surveys`]);
+    this.router.navigate([`/overview-surveys`]);
   }
 
   private async deleteSurvey(surveyId: number): Promise<void> {

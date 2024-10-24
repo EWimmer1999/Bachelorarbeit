@@ -4,9 +4,10 @@ import { lastValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SurveysService } from './surveys.service';
 import { TippsService } from './tipps.service';
-import { Survey, SurveyAnswer, Tipp } from './data.service';
+import { DiaryEntry, Survey, SurveyAnswer, Tipp } from './data.service';
 import { serverUrl } from 'src/environments/environment';
 import { AuthService } from './authentication.service';
+import { DiaryService } from './diary.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,15 @@ export class UpdateService {
 
   private answerUrl = `${this.url}/user-surveys`;
 
+  private diaryUrl = `${this.url}/diary-entries`;
+
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
     private surveysService: SurveysService,
     private tippsService: TippsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private diaryService: DiaryService
   ) {}
 
   async getSurveys(): Promise<void> {
@@ -81,7 +85,6 @@ export class UpdateService {
     }
   }
 
-
   async getTipps(): Promise<void> {
     try {
       const headers = new HttpHeaders({
@@ -104,7 +107,6 @@ export class UpdateService {
       console.error('Error fetching tipps:', error);
     }
   }
-
 
   async getAnswers(): Promise<void> {
     try {
@@ -129,7 +131,6 @@ export class UpdateService {
     }
   }
   
-
   async sendCachedAnswers(): Promise<void> {
     const cachedAnswers = await this.storageService.get('pendingAnswers') || [];
     
@@ -160,6 +161,59 @@ export class UpdateService {
 
     await this.storageService.set('pendingAnswers', pendingSurveys);
     console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
+  }
+
+  async sendDiary(entry: DiaryEntry) {
+ 
+    try {
+      const token = await this.storageService.get('token');
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+  
+      const response = await lastValueFrom(this.http.post(`${this.url}/diary-entry`, entry, { headers }));
+      
+      console.log('Diary answer submitted successfully:', response);
+      return true;
+    } catch (error) {
+      console.error('Failed to upload answers!', error);
+      return false; 
+    }
+  }
+
+  async sendCachedDiary(): Promise<void> {
+    const cachedDiaries = await this.storageService.get('scheduledEntries') || [];
+    
+    if (cachedDiaries.length === 0) {
+      console.log('Keine zwischengespeicherten Einträge gefunden.');
+      return; 
+    }
+  
+    for (const cachedDiary of cachedDiaries) {
+     
+      const success = await this.sendDiary(cachedDiary);
+  
+      if (success) {
+        console.log('Antworten wurden erfolgreich gesendet.');
+        await this.deleteCachedDiary(cachedDiary.entryId);
+      } else {
+        console.error('Antworten konnten nicht gesendet werden.');
+      }
+    }
+  }
+      
+  private async deleteCachedDiary(entryId: number): Promise<void> {
+    let pendingDiaries = await this.storageService.get('scheduledEntries') || [];
+
+    pendingDiaries = pendingDiaries.filter((entry: DiaryEntry) => entry.entryId !== entryId);
+
+    const test = await this.storageService.set('scheduledEntries', pendingDiaries);
+
+    if (test) {
+        console.log('Zwischengespeicherter Eintrag gelöscht:', entryId);
+    } else {
+        console.error('Fehler beim Löschen des zwischengespeicherten Eintrags:', entryId);
+    }
 }
 
 
@@ -174,9 +228,42 @@ export class UpdateService {
     } else {
       await this.getSurveys();
       await this.getAnswers();
+      await this.sendCachedDiary()
     }   
     await this.getTipps();           
     console.log("Updated")
+  }
+
+
+  async getDiaries(): Promise<void> {
+
+    const scheduledEntries = await this.storageService.get('scheduledEntries') || []
+
+    if (scheduledEntries.length > 0) {
+      console.log('Es gibt geplante Einträge. Die Serverabfrage wird abgebrochen.');
+      this.sendCachedDiary();
+    }
+  
+    try {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${await this.storageService.get('token')}`
+      });
+
+      console.log(headers)
+  
+      const response: DiaryEntry[] = await lastValueFrom(
+        this.http.get<DiaryEntry[]>(this.diaryUrl, { headers })
+      );
+  
+      console.log('Erhaltene Antworten vom Server:', response);
+  
+      if (response && response.length > 0) {
+        await this.diaryService.saveEntries(response);
+        console.log('Antworten erfolgreich lokal gespeichert');
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Antworten:', error);
+    }
   }
 
 }
