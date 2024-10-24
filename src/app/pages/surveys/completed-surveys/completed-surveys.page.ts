@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Survey } from 'src/app/services/data.service';
+import { Router } from '@angular/router';
+import { SurveyAnswer } from 'src/app/services/data.service';
 import { SurveysService } from 'src/app/services/surveys.service';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-completed-surveys',
@@ -9,12 +11,30 @@ import { SurveysService } from 'src/app/services/surveys.service';
 })
 export class CompletedSurveysPage implements OnInit {
 
-  completedSurveys: Survey[] = []; 
+  completedSurveys: SurveyAnswer[] = [];
+  cachedCompletedSurveys: SurveyAnswer[] = [];
 
-  constructor(private surveysService: SurveysService) { }
+  constructor(
+    private router: Router,
+    private surveysService: SurveysService,
+    private updateService: UpdateService
+  ) {}
 
   async ngOnInit() {
+
     this.completedSurveys = await this.surveysService.loadCompletedSurveys();
+
+    this.cachedCompletedSurveys = await this.surveysService.loadCachedCompletedSurveys();
+
+    this.completedSurveys = [...this.completedSurveys, ...this.cachedCompletedSurveys];
+    
   }
 
+  ionViewWillEnter(){
+    this.updateService.updateApp()
+  }
+
+  viewSurveyDetail(surveyId: number) {
+    this.router.navigate([`/completesurvey/${surveyId}`]);
+  }
 }

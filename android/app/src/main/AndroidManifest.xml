@@ -9,7 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        
 
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
@@ -33,11 +32,28 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths"/>
         </provider>
+
+        <service android:name="net.texh.cordovapluginstepcounter.StepCounterService" android:enabled="true" android:process=":cordovapluginstepcounter"/>
+            <receiver android:name="net.texh.cordovapluginstepcounter.StepCounterBootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            </receiver>
     </application>
 
     <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_TYPE_HEALTH" />
+
+    <application>
+        <service android:name=".ForegroundservicePlugin$ForegroundService"
+                android:foregroundServiceType="location" />
+    </application>
+
+
 </manifest>

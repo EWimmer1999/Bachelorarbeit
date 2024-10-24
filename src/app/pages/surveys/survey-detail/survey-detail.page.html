@@ -1,6 +1,6 @@
-<!-- src/app/pages/surveys/survey-detail/survey-detail.page.html -->
 <ion-header>
   <ion-toolbar>
+    <ion-button (click)="returnOverview()">Zurück</ion-button>
     <ion-title>Survey Details</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -25,7 +25,6 @@
               </ion-item>
               
               <ion-item *ngSwitchCase="'single-choice'">
-                
                 <ion-radio-group [(ngModel)]="question.answer">
                   <ion-item *ngFor="let option of question.options">
                     <ion-label>{{ option }}</ion-label>
@@ -37,6 +36,8 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <!-- Button below the questions -->
+      <ion-button expand="block" (click)="submitSurvey()">Submit</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>
