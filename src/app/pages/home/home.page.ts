@@ -4,6 +4,7 @@ import { NoiseMeter } from 'capacitor-noisemeter';
 import { StorageService } from 'src/app/services/storage.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,10 +23,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   isMeasuring: boolean = false;
 
+  showButton: boolean = false;
+
   constructor(
     private storage: StorageService, 
     private updateService: UpdateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private router: Router
   ) {} 
 
   async ngOnInit() {
@@ -40,9 +44,11 @@ export class HomePage implements OnInit, OnDestroy {
     this.themeService.applyTheme();
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.themeService.applyTheme();
-    this.updateService.updateApp()
+    this.updateService.updateApp();
+    const demographic =await this.storage.get("demographicTag");
+    this.showButton = demographic === "false";
   }
 
   async ionViewDidLeave() {
@@ -50,7 +56,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.stopNoiseMeter()
       this.noised = false;
     }
-
   }
 
   async toggleNoiseMeter() {
@@ -141,7 +146,6 @@ export class HomePage implements OnInit, OnDestroy {
     console.log('Gespeicherte Daten:', savedData);
   }
   
-
   async ngOnDestroy() {
     if (this.interval) {
       clearInterval(this.interval);

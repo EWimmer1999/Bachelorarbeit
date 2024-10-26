@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="!showButton"> 
     <ion-item *ngFor="let survey of surveys" (click)="viewSurveyDetail(survey.id)">
       <ion-label>
         {{ survey.title }}

@@ -33,13 +33,21 @@ export class SurveysService {
     }
   }
 
+  async saveSurvey(survey: Survey): Promise<void> {
+    if (!survey) {
+        return; 
+    }
+
+    await this.storage.remove('demograpgic');
+    await this.storage.set('demographic', survey);
+  }
+
   async loadpendingSurveys(): Promise<Survey[]> {
     return await this.storage.get(this.pendingsurveysKey) || [];
   }
 
   async clearSurveys() {
     await this.storage.remove(this.pendingsurveysKey);
-    await this.storage.remove(this.completesurveysKey);
   }
 
   async clearCompletedSurveys() {

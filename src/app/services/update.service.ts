@@ -42,22 +42,29 @@ export class UpdateService {
       const response: Survey[] = await lastValueFrom(
         this.http.get<Survey[]>(this.surveysUrl, { headers })
       );
-
-      console.log(response)
+  
+      console.log(response);
   
       if (response) {
-        const pendingSurveys = response.filter(survey => !survey.completed);
+        const demographicSurvey = response.find(survey => survey.demographic);
+  
+        if (demographicSurvey) {
+          await this.surveysService.saveSurvey(demographicSurvey);
+          console.log('Demografischer Fragebogen erfolgreich gespeichert:', demographicSurvey);
+        }
+  
+        const pendingSurveys = response.filter(survey => !survey.completed && !survey.demographic);
   
         await this.surveysService.clearSurveys();
-        
         await this.surveysService.saveSurveys(pendingSurveys, 'pending');
   
-        console.log('Surveys successfully fetched and stored locally');
+        console.log('Offene Fragebögen erfolgreich abgerufen und lokal gespeichert');
   
         this.authService.updateToken();
       }
+  
     } catch (error) {
-      console.error('Error fetching surveys:', error);
+      console.error('Fehler beim Abrufen der Fragebögen:', error);
     }
   }
   
@@ -142,7 +149,6 @@ export class UpdateService {
     for (const cachedAnswer of cachedAnswers) {
       const { surveyId, responses, noiseLevel } = cachedAnswer;
       
-  
       const success = await this.sendAnswer(surveyId, responses, noiseLevel);
   
       if (success) {
@@ -156,12 +162,25 @@ export class UpdateService {
       
   private async deleteCachedAnswer(surveyId: string): Promise<void> {
     let pendingSurveys = await this.storageService.get('pendingAnswers') || [];
+    console.log('Aktuelle gespeicherte Antworten:', pendingSurveys);
 
-    pendingSurveys = pendingSurveys.filter((s: any) => s?.survey?.id !== surveyId);
+    if (!surveyId) {
+        console.warn('Ungültige Survey ID:', surveyId);
+        return;
+    }
 
-    await this.storageService.set('pendingAnswers', pendingSurveys);
-    console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
+    const filteredSurveys = pendingSurveys.filter((s: any) => s?.surveyId !== surveyId);
+
+    if (filteredSurveys.length === pendingSurveys.length) {
+        console.warn('Keine zwischengespeicherten Antworten für Umfrage gefunden:', surveyId);
+    } else {
+        console.log('Antworten nach dem Löschen:', filteredSurveys);
+        await this.storageService.set('pendingAnswers', filteredSurveys);
+        console.log('Zwischengespeicherte Antwort gelöscht für Umfrage:', surveyId);
+    }
   }
+
+
 
   async sendDiary(entry: DiaryEntry) {
  
@@ -239,8 +258,6 @@ export class UpdateService {
     await this.getTipps();           
     console.log("Updated");
   }
-
-
 
   async getDiaries(): Promise<void> {
 

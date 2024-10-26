@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SurveyAnswer } from 'src/app/services/data.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { SurveysService } from 'src/app/services/surveys.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { UpdateService } from 'src/app/services/update.service';
@@ -14,12 +15,14 @@ export class CompletedSurveysPage implements OnInit {
 
   completedSurveys: SurveyAnswer[] = [];
   cachedCompletedSurveys: SurveyAnswer[] = [];
+  showButton: boolean = false;
 
   constructor(
     private router: Router,
     private surveysService: SurveysService,
     private updateService: UpdateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private storage: StorageService
   ) {}
 
   async ngOnInit() {
@@ -33,8 +36,10 @@ export class CompletedSurveysPage implements OnInit {
     this.themeService.applyTheme();
   }
 
-  ionViewWillEnter(){
-    this.updateService.updateApp()
+  async ionViewWillEnter(){
+    this.updateService.updateApp();
+    const demographic =await this.storage.get("demographic");
+    this.showButton = demographic === "false";
   }
 
   viewSurveyDetail(surveyId: number) {

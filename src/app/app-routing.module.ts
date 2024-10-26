@@ -111,6 +111,13 @@ const routes: Routes = [
     path: 'change-pw',
     loadChildren: () => import('./pages/change-pw/change-pw.module').then( m => m.ChangePWPageModule),
     canActivate:[AuthGuard]
+  },
+  {
+    path: 'demographic',
+    loadChildren: () => import('./pages/surveys/demographic/demographic.module').then( m => m.DemographicPageModule)
+  },  {
+    path: 'edit',
+    loadChildren: () => import('./pages/surveys/edit/edit.module').then( m => m.EditPageModule)
   }
 
 ];
