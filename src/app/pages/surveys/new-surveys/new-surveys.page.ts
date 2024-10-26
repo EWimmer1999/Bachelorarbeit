@@ -4,6 +4,7 @@ import { SurveysService } from 'src/app/services/surveys.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { Router } from '@angular/router';
 import { ThemeService } from 'src/app/services/theme.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-new-surveys',
@@ -14,12 +15,13 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class NewSurveysPage implements OnInit {
 
   surveys: Survey[] = [];
+  showButton: boolean = false;
 
   constructor(
     private surveysService: SurveysService, 
     private router: Router, 
-    private updateService: UpdateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private storage: StorageService
   ) { }
 
   async ngOnInit() {
@@ -31,6 +33,8 @@ export class NewSurveysPage implements OnInit {
   async ionViewWillEnter(){
     this.surveys = await this.surveysService.loadpendingSurveys();
     console.log('Loaded surveys from storage:', this.surveys);
+    const demographic =await this.storage.get("demographic");
+    this.showButton = demographic === "false";
   }
 
 

@@ -52,6 +52,7 @@ export class AuthService {
       if (response.status === 201) {
         console.log('User registered successfully');
         await this.storageService.set("token", response.body?.token);
+        await this.storageService.set("demographicTag", "false");
         this.isAuthenticated.next(true);
         this.router.navigate(['home']);
       }
@@ -64,10 +65,11 @@ export class AuthService {
   
   async login(postData: any): Promise<void> {
     try {
-      const response = await lastValueFrom(this.http.post<{ token: string }>(`${this.url}/login`, postData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post<{token: string, demographic: boolean }>(`${this.url}/login`, postData, { observe: 'response' }));
       if (response.status === 200) {
         console.log('User logged in successfully');
         await this.storageService.set("token", response.body?.token);
+        await this.storageService.set("demographicTag", response.body?.demographic.toString());
         this.isAuthenticated.next(true);
         this.router.navigate(['home']);
       }

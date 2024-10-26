@@ -23,6 +23,12 @@
   </ion-header>
 
   <ion-card>
+    <ion-button *ngIf="showButton" routerLink="/demographic">
+      Demographic Button
+    </ion-button>
+  </ion-card>
+
+  <ion-card>
     <ion-card-header>
       <ion-card-title>Aktuelle Schrittanzahl</ion-card-title>
     </ion-card-header>

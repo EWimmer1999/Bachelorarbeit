@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SurveyAnswer } from 'src/app/services/data.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { SurveysService } from 'src/app/services/surveys.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { UpdateService } from 'src/app/services/update.service';
@@ -18,7 +19,7 @@ export class CompletedSurveyDetailPage implements OnInit {
     private route: ActivatedRoute,
     private surveysService: SurveysService,
     private updateService: UpdateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   async ngOnInit() {
@@ -29,7 +30,7 @@ export class CompletedSurveyDetailPage implements OnInit {
     this.themeService.applyTheme();
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.updateService.updateApp()
   }
 

@@ -41,7 +41,6 @@ export class SurveyDetailPage implements OnInit {
     this.survey = (await this.surveysService.loadpendingSurveys()).find(s => s.id === surveyId) || null;
     this.themeService.applyTheme();
     this.noiseMeter = this.storageService.get('noiseDataActivated').toString()
-
   }
 
   async ionViewDidEnter() {
@@ -151,19 +150,10 @@ export class SurveyDetailPage implements OnInit {
       };
     });
 
-    const success = await this.updateService.sendAnswer(this.survey.id, responses, this.averageNoise);
-  
-    if (success) {
-      console.log('Antworten wurden erfolgreich gesendet.');
-      await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
-      await this.deleteSurvey(this.survey.id);
-      
-    } else {
-      console.error('Antworten konnten nicht gesendet werden.');
-      await this.saveSurveyLocally(this.survey, responses);
-      await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
-      await this.deleteSurvey(this.survey.id);
-    }
+    await this.saveSurveyLocally(this.survey, responses);
+    await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
+    await this.deleteSurvey(this.survey.id);
+    
     this.router.navigate([`/overview-surveys`]);
   }
 
@@ -177,7 +167,6 @@ export class SurveyDetailPage implements OnInit {
 
     console.log(`Umfrage mit der ID ${surveyId} wurde erfolgreich gelöscht.`);
   }
-
 
   private async saveSurveyLocally(survey: any, responses: any) {
     let pendingAnswers = await this.storageService.get('pendingAnswers') || [];
@@ -193,7 +182,6 @@ export class SurveyDetailPage implements OnInit {
     console.log('Umfrage wurde lokal zwischengespeichert:', pendingAnswers);
   }
   
-
   private async saveSurveyAsSurveyAnswer(survey: any, responses: any, questions: any): Promise<void> {
     let pendingSurveys = await this.storageService.get('completedSurveys') || [];
 

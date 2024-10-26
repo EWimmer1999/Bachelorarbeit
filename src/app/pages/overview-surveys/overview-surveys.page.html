@@ -9,7 +9,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-tabs>
+<ion-content>
+  <ion-button *ngIf="showButton" routerLink="/demographic">
+    Demographic Button
+  </ion-button>
+
+<ion-tabs *ngIf="!showButton">
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="new">
       <ion-icon name="list-outline"></ion-icon>
