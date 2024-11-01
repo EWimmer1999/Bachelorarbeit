@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Demografischer Fragebogen
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="returnOverview()">Back</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngIf="survey">
+    <ion-card-header>
+      <ion-card-title>{{ survey.title }}</ion-card-title>
+      <ion-card-subtitle>{{ survey.description }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>{{ survey.description }}</p>
+      <ion-list>
+        <ion-item *ngFor="let question of survey.questions">
+          <ion-label>
+            {{ question.text }}
+            <ng-container [ngSwitch]="question.type">
+              <ion-input *ngSwitchCase="'text'" [(ngModel)]="question.answer" placeholder="Type your answer"></ion-input>
+              
+              <ion-item *ngSwitchCase="'multiple-choice'">
+                <ion-label>Wähle mehrere Antworten aus!</ion-label>
+                <ion-checkbox *ngFor="let option of question.options" [checked]="isChecked(option)" (ionChange)="onMultipleChoiceChange(option, $event)">{{ option }}</ion-checkbox>
+              </ion-item>
+              
+              <ion-item *ngSwitchCase="'single-choice'">
+                <ion-radio-group [(ngModel)]="question.answer">
+                  <ion-item *ngFor="let option of question.options">
+                    <ion-label>{{ option }}</ion-label>
+                    <ion-radio slot="start" [value]="option"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-item>
+            </ng-container>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <!-- Button below the questions -->
+      <ion-button expand="block" (click)="submitSurvey()">Absenden</ion-button>
+    </ion-card-content>>
+  </ion-card>
+</ion-content>
+
+<style>
+  .question-item {
+    margin-bottom: 12px;
+  }
+  .question-item h3 {
+    font-weight: bold;
+  }
+</style>

@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { StorageService } from 'src/app/services/storage.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-noisemeter',
@@ -22,14 +23,18 @@ export class NoisemeterPage implements OnInit {
   chart!: Chart;
   todayChart!: Chart;
 
-  constructor(private storage: StorageService) {}
+  constructor(
+    private storage: StorageService,
+    private themeService: ThemeService
+  ) {}
 
   async ngOnInit() {
     await this.loadSavedData();
     this.prepareChartData();
     await this.prepareGroupedChartData(); // Für das heutige Diagramm
     Chart.register(...registerables);
-    this.createCharts(); // Beide Diagramme erstellen
+    this.createCharts();
+    this.themeService.applyTheme();
   }
 
   createCharts() {
@@ -39,7 +44,7 @@ export class NoisemeterPage implements OnInit {
         labels: this.chartLabels,
         datasets: [
           {
-            label: 'Average Noise Levels',
+            label: 'Durchschnittliche Lautstärkemessungen der letzten sieben Tage:',
             data: this.chartData,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -53,7 +58,7 @@ export class NoisemeterPage implements OnInit {
           x: {
             title: {  
               display: true,
-              text: 'Date',
+              text: 'Datum',
             },
           },
           y: {
@@ -73,7 +78,7 @@ export class NoisemeterPage implements OnInit {
         labels: this.todayChartLabels,
         datasets: [
           {
-            label: 'Today Noise Measurements',
+            label: 'Heutige Lautstärkemessungen',
             data: this.todayChartData,
             borderColor: 'rgba(255, 99, 132, 1)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -87,7 +92,7 @@ export class NoisemeterPage implements OnInit {
           x: {
             title: {
               display: true,
-              text: 'Hour',
+              text: 'Stunde',
             },
           },
           y: {

@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { NoiseMeter } from 'capacitor-noisemeter';
 import { Survey, SurveyAnswer } from 'src/app/services/data.service';
 import { NavController } from '@ionic/angular';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-survey-detail',
@@ -24,6 +25,7 @@ export class SurveyDetailPage implements OnInit {
   currentDecibels: number = 0;
   noise: boolean = true;
   savedData: any;
+  noiseMeter: string = 'false';
 
   constructor(
     private route: ActivatedRoute,
@@ -31,16 +33,21 @@ export class SurveyDetailPage implements OnInit {
     private updateService: UpdateService,
     private storageService: StorageService,
     private router: Router,
-    private navController: NavController
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
     const surveyId = +this.route.snapshot.paramMap.get('id')!;
     this.survey = (await this.surveysService.loadpendingSurveys()).find(s => s.id === surveyId) || null;
+    this.themeService.applyTheme();
+    this.noiseMeter = this.storageService.get('noiseDataActivated').toString()
   }
 
   async ionViewDidEnter() {
-    this.startNoiseMeter()
+
+    if(this.noiseMeter === 'true'){
+      this.startNoiseMeter()
+    }
   }
 
   async startNoiseMeter() {
@@ -90,7 +97,6 @@ export class SurveyDetailPage implements OnInit {
     this.averageNoise = sum / this.noiseLevel.length;
   }
   
-
   private async saveAverageNoiseWithDate() {
     const date = new Date().toISOString();
     this.savedData = {
@@ -104,7 +110,9 @@ export class SurveyDetailPage implements OnInit {
   }
 
   returnOverview(){
-    this.stopNoiseMeter()
+    if(this.noiseMeter === 'true'){
+      this.stopNoiseMeter()
+    }
     this.router.navigate(['overview-surveys']);
   }
 
@@ -131,7 +139,9 @@ export class SurveyDetailPage implements OnInit {
   }
 
   async submitSurvey() {
-    await this.stopNoiseMeter();
+    if(this.noiseMeter === 'true'){
+      this.stopNoiseMeter()
+    }
   
     const responses = this.survey.questions.map((question: any) => {
       return {
@@ -140,21 +150,11 @@ export class SurveyDetailPage implements OnInit {
       };
     });
 
-    const success = await this.updateService.sendAnswer(this.survey.id, responses, this.averageNoise);
-  
-    if (success) {
-      console.log('Antworten wurden erfolgreich gesendet.');
-      await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
-      await this.deleteSurvey(this.survey.id);
-      
-    } else {
-      console.error('Antworten konnten nicht gesendet werden.');
-      await this.saveSurveyLocally(this.survey, responses);
-      await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
-      await this.deleteSurvey(this.survey.id);
-    }
-    this.navController.navigateBack([`/overview-surveys`]);
-    //this.router.navigate([`/overview-surveys`]);
+    await this.saveSurveyLocally(this.survey, responses);
+    await this.saveSurveyAsSurveyAnswer(this.survey, responses, this.survey.questions);
+    await this.deleteSurvey(this.survey.id);
+    
+    this.router.navigate([`/overview-surveys`]);
   }
 
   private async deleteSurvey(surveyId: number): Promise<void> {
@@ -167,7 +167,6 @@ export class SurveyDetailPage implements OnInit {
 
     console.log(`Umfrage mit der ID ${surveyId} wurde erfolgreich gelöscht.`);
   }
-
 
   private async saveSurveyLocally(survey: any, responses: any) {
     let pendingAnswers = await this.storageService.get('pendingAnswers') || [];
@@ -183,7 +182,6 @@ export class SurveyDetailPage implements OnInit {
     console.log('Umfrage wurde lokal zwischengespeichert:', pendingAnswers);
   }
   
-
   private async saveSurveyAsSurveyAnswer(survey: any, responses: any, questions: any): Promise<void> {
     let pendingSurveys = await this.storageService.get('completedSurveys') || [];
 
@@ -209,6 +207,4 @@ export class SurveyDetailPage implements OnInit {
     await this.storageService.set('completedSurveys', pendingSurveys);
     console.log('Umfrage wurde als SurveyAnswer lokal zwischengespeichert:', surveyAnswer);
   }
-
-
 }

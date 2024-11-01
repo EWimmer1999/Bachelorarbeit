@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Surveys
+      Umfragen
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,7 +13,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>{{ completedSurveys.surveyTitle }}</ion-card-title>
-      <ion-card-subtitle>Noise Level: {{ completedSurveys.noiseLevel }}</ion-card-subtitle>
+      <ion-card-subtitle>Lautstärkelevel: {{ completedSurveys.noiseLevel }}</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
@@ -22,7 +22,7 @@
         <ion-item *ngFor="let question of completedSurveys.questions" class="question-item">
           <ion-label>
             <h3>{{ question.questionText }}</h3>
-            <p>Answer: <strong>{{ question.answer ? question.answer : 'Keine Antwort gegeben' }}</strong></p>
+            <p>Antwort: <strong>{{ question.answer ? question.answer : 'Keine Antwort gegeben' }}</strong></p>
           </ion-label>
         </ion-item>
       </ion-list>

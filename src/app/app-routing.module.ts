@@ -53,7 +53,8 @@ const routes: Routes = [
   },
   {
     path: 'new-surveys',
-    loadChildren: () => import('./pages/surveys/new-surveys/new-surveys.module').then( m => m.NewSurveysPageModule)
+    loadChildren: () => import('./pages/surveys/new-surveys/new-surveys.module').then( m => m.NewSurveysPageModule),
+    canActivate:[AuthGuard]
   },
   { path: 'overview-surveys', component: OverviewSurveysPage, children: [
     { path: '', pathMatch: 'full', redirectTo: 'new'},
@@ -73,15 +74,50 @@ const routes: Routes = [
   },
   {
     path: 'noisemeter',
-    loadChildren: () => import('./pages/data/noisemeter/noisemeter.module').then( m => m.NoisemeterPageModule)
+    loadChildren: () => import('./pages/data/noisemeter/noisemeter.module').then( m => m.NoisemeterPageModule),
+    canActivate:[AuthGuard]
   },
   {
     path: 'tipp-detail',
-    loadChildren: () => import('./pages/tipp-detail/tipp-detail.module').then( m => m.TippDetailPageModule)
+    loadChildren: () => import('./pages/tipp-detail/tipp-detail.module').then( m => m.TippDetailPageModule),
+    canActivate:[AuthGuard]
   },
   {
     path: 'completed-survey-detail',
-    loadChildren: () => import('./pages/surveys/completed-survey-detail/completed-survey-detail.module').then( m => m.CompletedSurveyDetailPageModule)
+    loadChildren: () => import('./pages/surveys/completed-survey-detail/completed-survey-detail.module').then( m => m.CompletedSurveyDetailPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'diary',
+    loadChildren: () => import('./pages/diary/diary/diary.module').then( m => m.DiaryPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'new-diary',
+    loadChildren: () => import('./pages/diary/new-diary/new-diary.module').then( m => m.NewDiaryPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'detail/:id',
+    loadChildren: () => import('./pages/diary/diary-entry-detail/diary-entry-detail.module').then( m => m.DiaryEntryDetailPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'edit-entry/:id',
+    loadChildren: () => import('./pages/diary/edit-entry/edit-entry.module').then( m => m.EditEntryPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'change-pw',
+    loadChildren: () => import('./pages/change-pw/change-pw.module').then( m => m.ChangePWPageModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path: 'demographic',
+    loadChildren: () => import('./pages/surveys/demographic/demographic.module').then( m => m.DemographicPageModule)
+  },  {
+    path: 'edit',
+    loadChildren: () => import('./pages/surveys/edit/edit.module').then( m => m.EditPageModule)
   }
 
 ];

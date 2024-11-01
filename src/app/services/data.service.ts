@@ -6,14 +6,15 @@ export interface Survey {
   description?: string;
   questions: Question[];
   completed?: string; 
+  demographic: boolean;
 }
 
 export interface Question {
   id: number;
   text: string;
   type: 'text' | 'multiple-choice' | 'single-choice';
-  options?: string[]; // Nur relevant für multiple-choice und single-choice
-  answer?: string | string[]; // Benutzerantworten, Typ hängt vom Fragetyp ab
+  options?: string[];
+  answer?: string | string[];
 }
 
 export interface SurveyAnswer {
@@ -36,6 +37,30 @@ export interface Tipp {
   flavour: string,
   text: string
 }
+
+
+export interface DiaryEntry {
+  entryId: number;
+  date: string; 
+  time: string; 
+  foodCategory: string;
+  information: string;
+  notes: string;
+  activities: {
+    happy: boolean;
+    excited: boolean;
+    sad: boolean;
+  };
+  stressLevel: number;
+  deleted: boolean;
+}
+
+export interface Settings {
+  darkMode: string;
+  noiseData: string;
+  stepData: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -52,7 +77,8 @@ export class DataService {
         questions: [
          
         ],
-        completed: 'true'
+        completed: 'true',
+        demographic: true
       }
     ];
   }

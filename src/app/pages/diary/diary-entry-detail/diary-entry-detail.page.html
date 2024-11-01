@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tagebucheintrag</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="entry">
+    <ion-card-header>
+      <ion-card-title>{{ entry.date | date: 'yyyy-MM-dd' }} - {{ formattedTime}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Essenskategorie:</strong> {{ entry.foodCategory }}</p>
+      <p><strong>Informationen über das Essen</strong> {{ entry.information }}</p>
+      <p><strong>Sonstige Notizen</strong> {{ entry.notes }}</p>
+      <p><strong>Stresslevel:</strong> {{ entry.stressLevel }}</p>
+      <p><strong>Gefühle:</strong></p>
+      <ul>
+        <li *ngIf="entry.activities.happy">Traurig</li>
+        <li *ngIf="entry.activities.excited">Fröhlich</li>
+        <li *ngIf="entry.activities.sad">Angespannt</li>
+      </ul>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="full" (click)="editEntry()">Eintrag bearbeiten</ion-button>
+  <ion-button expand="full" (click)="deleteEntry()">Eintrag löschen</ion-button>
+</ion-content>

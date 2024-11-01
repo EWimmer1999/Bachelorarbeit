@@ -4,21 +4,26 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Surveys
+      Umfragen
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-tabs>
+<ion-content>
+  <ion-button *ngIf="showButton" routerLink="/demographic">
+    Demografischen Fragebogen ausfüllen
+  </ion-button>
+
+<ion-tabs *ngIf="!showButton">
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="new">
       <ion-icon name="list-outline"></ion-icon>
-      <ion-label>New Surveys</ion-label>
+      <ion-label>Neue Umfragen</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="completed">
       <ion-icon name="checkmark-done-outline"></ion-icon>
-      <ion-label>Completed Surveys</ion-label>
+      <ion-label>Ausgefüllte Umfragen</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

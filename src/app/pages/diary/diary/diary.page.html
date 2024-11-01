@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Esstagebuch
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Esstagebuch</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="date-navigation">
+    <ion-button (click)="changeDate(-1)">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <ion-label>{{ selectedDate | date: 'yyyy-MM-dd' }}</ion-label>
+    <ion-button (click)="changeDate(1)">
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <ion-button expand="block" routerLink="/new-diary">
+    Neuen Eintrag hinzufügen
+  </ion-button>
+
+  <ion-list>
+    <ion-item *ngFor="let entry of filteredEntries" (click)="openEntryDetail(entry)">
+      <ion-label>
+        <h2>{{ entry.time }}</h2>
+        <p>{{ entry.foodCategory }}</p>
+        <p>{{ entry.information }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="syncServer()">
+    Synchronisieren
+  </ion-button>
+</ion-content>
