@@ -52,7 +52,7 @@
     <receiver android:name="io.capacitor.plugin.foregroundservice.RestartServiceReceiver" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        <action android:name="YOUR_PACKAGE_NAME.action.RESTART_SERVICE"/>
+        <action android:name="io.capacitor.plugin.action.RESTART_SERVICE"/>
       </intent-filter>
     </receiver>
 

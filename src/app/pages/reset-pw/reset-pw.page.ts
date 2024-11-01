@@ -38,6 +38,11 @@ export class ResetPwPage implements OnInit {
     this.router.navigate(['login']); //ToDo: Only redirect if the email request was sucessful
   }
 
+
+  navigateLogin(){
+    this.router.navigate(['login']);
+  }
+
   
 }
 

@@ -5,6 +5,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { Foregroundservice } from 'capacitor-foregroundservice';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,11 @@ import { Foregroundservice } from 'capacitor-foregroundservice';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit, OnDestroy {
-  steps: number = 0;
+  public dailySteps: number = 0;
+  public totalSteps: number = 0;
+  private lastResetDate: string = ''; 
+  private startSteps: number = 0;
+
   interval: any;
   noiseData: number[] = [];
   averageNoise: number = 0;
@@ -23,27 +28,9 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private storage: StorageService,
     private updateService: UpdateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private toastController: ToastController
   ) {}
-
-  async ngOnInit() {
-    try {
-      await Foregroundservice.startService();
-    } catch (error) {
-      console.log('Fehler beim Starten des Foreground Services:', error);
-    }
-
-    await this.storage.initStorage();
-    await this.startStepCounter();
-    this.updateStepCount();
-
-    this.interval = setInterval(() => {
-      this.updateStepCount();
-    }, 5000);
-    
-    await this.updateService.getSettings();
-    this.themeService.applyTheme();
-  }
 
   ionViewWillEnter() {
     this.themeService.applyTheme();
@@ -57,24 +44,103 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  async testForeground() {
+  async ngOnInit() {
+    await this.storage.initStorage();
+    await this.loadStepData();
+
+    
+    await this.startStepCounter();
+
+    this.interval = setInterval(() => {
+      this.updateStepCount();
+    }, 100);
+    
+    this.updateService.getSettings();
+    this.themeService.applyTheme();
+    Foregroundservice.startService();
+  }
+
+  async updateStepCount() {
     try {
-      await Foregroundservice.startService();
+      const result = await StepCounter.getStepCount();
+      if (this.startSteps == 0) {
+        this.startSteps = result.steps;
+      } else{
+        this.totalSteps = result.steps - this.startSteps;
+      }
     } catch (error) {
-      console.log('Fehler beim Testen des Foreground Services:', error);
+      console.log('Fehler beim Abrufen der Schrittanzahl:', error);
     }
   }
 
+  async loadStepData() {
+    const savedData = await this.storage.get('steps');
+    if (savedData) {
+      this.dailySteps = savedData.steps || 0; 
+      this.lastResetDate = savedData.date || new Date().toISOString().split('T')[0];
+    }
+  }
 
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+        message: message,
+        duration: 2000,
+        position: 'bottom',
+    });
+    toast.present();
+  }
+
+  async loadDailySteps() {
+    const currentDate = new Date().toISOString().split('T')[0]; 
+    const savedData = await this.storage.get(currentDate);
+    if (savedData) {
+      this.dailySteps = savedData.steps;
+      this.lastResetDate = currentDate; 
+    }
+  }
+
+  async ngOnDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    try {
+      await StepCounter.stop();
+    } catch (error) {
+      console.log('Fehler beim Zerstören:', error);
+    }
+  }
 
   async toggleNoiseMeter() {
     if (this.isMeasuring) {
-      await this.stopNoiseMeter();
+        await this.stopNoiseMeter();
+        this.isMeasuring = false;
     } else {
-      await this.startNoiseMeter();
+        try {
+            await NoiseMeter.start();
+            this.isMeasuring = true;
+            this.interval = setInterval(() => {
+                this.getNoiseLevel();
+            }, 1000);
+        } catch (error) {
+            console.log("Berechtigung zur Audioaufnahme abgelehnt oder Fehler beim Starten:", error);
+            this.presentToast("Berechtigung zur Audioaufnahme abgelehnt.");
+        }
     }
-    this.isMeasuring = !this.isMeasuring;
   }
+
+
+  async startNoiseMeasure(){
+    try {
+      await NoiseMeter.start();
+      this.interval = setInterval(() => {
+        this.getNoiseLevel();
+      }, 1000);
+      this.noised = true;
+    } catch (error) {
+      console.log('Fehler beim Starten des NoiseMeters:', error);
+    }
+  }
+  
 
   private async startStepCounter() {
     try {
@@ -84,36 +150,17 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  public async updateStepCount() {
-    try {
-      const result = await StepCounter.getStepCount();
-      this.steps = result.steps;
-    } catch (error) {
-      console.log('Fehler beim Abrufen der Schrittanzahl:', error);
-    }
-  }
-
-  async startNoiseMeter() {
-    try {
-      await NoiseMeter.startRecording();
-      this.interval = setInterval(() => {
-        this.getNoiseLevel();
-      }, 1000);
-      this.noised = true;
-    } catch (error) {
-      console.log('Fehler beim Starten des NoiseMeters:', error);
-    }
-  }
 
   async getNoiseLevel() {
     try {
       const result = await NoiseMeter.getNoiseLevel();
       this.currentDecibels = result.decibels;
-
-      if (!isNaN(this.currentDecibels)) {
+  
+      // Nur Werte > 0 zur noiseData-Liste hinzufügen
+      if (!isNaN(this.currentDecibels) && this.currentDecibels > 0) {
         this.noiseData.push(this.currentDecibels);
       } else {
-        console.log('Ungültiger Geräuschpegel: ', this.currentDecibels);
+        console.log('Ungültiger oder zu niedriger Geräuschpegel: ', this.currentDecibels);
       }
     } catch (error) {
       console.log('Fehler beim Abrufen des Geräuschpegels:', error);
@@ -137,32 +184,23 @@ export class HomePage implements OnInit, OnDestroy {
       this.averageNoise = 0;
       return;
     }
-
+  
     const sum = this.noiseData.reduce((acc, val) => acc + val, 0);
-    this.averageNoise = sum / this.noiseData.length;
+    this.averageNoise = parseFloat((sum / this.noiseData.length).toFixed(2)); 
   }
+  
 
   private async saveAverageNoiseWithDate() {
     const date = new Date().toISOString();
     const savedData = {
       date: date,
-      averageNoise: this.averageNoise,
+      averageNoise: this.averageNoise, 
     };
-
+  
     console.log('Zu speichernde Daten:', savedData);
     await this.storage.set(date, savedData);
     console.log('Gespeicherte Daten:', savedData);
   }
+  
 
-  async ngOnDestroy() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-    try {
-      await StepCounter.stop();
-      await NoiseMeter.stop();
-    } catch (error) {
-      console.log('Fehler beim Zerstören:', error);
-    }
-  }
 }
