@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
     allowMixedContent: true
   },
   appId: 'io.ionic.starter',
-  appName: 'Bachelorarbeit',
+  appName: 'StrEssen',
   webDir: 'www'
 };
 
