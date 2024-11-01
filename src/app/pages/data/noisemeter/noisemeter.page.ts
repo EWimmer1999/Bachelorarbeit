@@ -44,7 +44,7 @@ export class NoisemeterPage implements OnInit {
         labels: this.chartLabels,
         datasets: [
           {
-            label: 'Average Noise Levels',
+            label: 'Durchschnittliche Lautstärkemessungen der letzten sieben Tage:',
             data: this.chartData,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -58,7 +58,7 @@ export class NoisemeterPage implements OnInit {
           x: {
             title: {  
               display: true,
-              text: 'Date',
+              text: 'Datum',
             },
           },
           y: {
@@ -78,7 +78,7 @@ export class NoisemeterPage implements OnInit {
         labels: this.todayChartLabels,
         datasets: [
           {
-            label: 'Today Noise Measurements',
+            label: 'Heutige Lautstärkemessungen',
             data: this.todayChartData,
             borderColor: 'rgba(255, 99, 132, 1)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -92,7 +92,7 @@ export class NoisemeterPage implements OnInit {
           x: {
             title: {
               display: true,
-              text: 'Hour',
+              text: 'Stunde',
             },
           },
           y: {

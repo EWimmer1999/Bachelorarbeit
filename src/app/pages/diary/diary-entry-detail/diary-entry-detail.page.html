@@ -13,15 +13,15 @@
       <ion-card-title>{{ entry.date | date: 'yyyy-MM-dd' }} - {{ formattedTime}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Food Category:</strong> {{ entry.foodCategory }}</p>
-      <p><strong>Additional Info:</strong> {{ entry.information }}</p>
-      <p><strong>Notes:</strong> {{ entry.notes }}</p>
-      <p><strong>Stress Level:</strong> {{ entry.stressLevel }}</p>
-      <p><strong>Emotions:</strong></p>
+      <p><strong>Essenskategorie:</strong> {{ entry.foodCategory }}</p>
+      <p><strong>Informationen über das Essen</strong> {{ entry.information }}</p>
+      <p><strong>Sonstige Notizen</strong> {{ entry.notes }}</p>
+      <p><strong>Stresslevel:</strong> {{ entry.stressLevel }}</p>
+      <p><strong>Gefühle:</strong></p>
       <ul>
-        <li *ngIf="entry.activities.happy">Happy</li>
-        <li *ngIf="entry.activities.excited">Excited</li>
-        <li *ngIf="entry.activities.sad">Sad</li>
+        <li *ngIf="entry.activities.happy">Traurig</li>
+        <li *ngIf="entry.activities.excited">Fröhlich</li>
+        <li *ngIf="entry.activities.sad">Angespannt</li>
       </ul>
     </ion-card-content>
   </ion-card>

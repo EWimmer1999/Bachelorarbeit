@@ -2,21 +2,24 @@
   <div class="flex-center">
     <ion-card>
       <ion-card-header>
-        <ion-card-title color="success">Register</ion-card-title>
+        <ion-card-title>Registrieren</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
         <ion-item>
-          <ion-input [(ngModel)]="username" label="Username" labelPlacement="floating" placeholder="Username"></ion-input>
+          <ion-input [(ngModel)]="username" label="Benutzername" labelPlacement="floating" placeholder="Benutzername"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input [(ngModel)]="email" label="Email" labelPlacement="floating" placeholder="Email"></ion-input>
+          <ion-input [(ngModel)]="email" label="E-Mail" labelPlacement="floating" placeholder="E-Mail"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input [(ngModel)]="password" label="Password" type="password" labelPlacement="floating" placeholder="Password"></ion-input>
+          <ion-input [(ngModel)]="password" label="Passwort" type="password" labelPlacement="floating" placeholder="Passwort"></ion-input>
         </ion-item>
-        <ion-button color="dark" fill="clear" size="full" (click)="login()">Already have an account?</ion-button>
-        <ion-button color="success" size="full" (click)="register()">Register</ion-button>
+        <ion-item>
+          <ion-input [(ngModel)]="password" label="Passwort" type="password" labelPlacement="floating" placeholder="Passwort"></ion-input>
+        </ion-item>
+        <ion-button color="dark" fill="clear" size="full" (click)="login()">Bereits registriert?</ion-button>
+        <ion-button size="full" (click)="register()">Registrieren</ion-button>
       </ion-card-content>
     </ion-card>
   </div>

@@ -19,7 +19,7 @@
 
   <ion-card>
     <ion-button *ngIf="showButton" routerLink="/demographic">
-      Demographic Button
+      Demografischen Fragebogen ausfüllen
     </ion-button>
   </ion-card>
 
@@ -34,14 +34,14 @@
         <ion-item *ngFor="let question of completedSurveys.questions" class="question-item">
           <ion-label>
             <h3>{{ question.questionText }}</h3>
-            <p>Answer: <strong>{{ question.answer ? question.answer : 'Keine Antwort gegeben' }}</strong></p>
+            <p>Antwort: <strong>{{ question.answer ? question.answer : 'Keine Antwort gegeben' }}</strong></p>
           </ion-label>
         </ion-item>
       </ion-list>
     </ion-card-content>
 
     <ion-button routerLink="/edit">
-      Edit
+      Bearbeiten
     </ion-button>
   </ion-card>
 

@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Demographic Survey
+      Demografischer Fragebogen
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="returnOverview()">Back</ion-button>
@@ -29,7 +29,7 @@
               <ion-input *ngSwitchCase="'text'" [(ngModel)]="question.answer" placeholder="Type your answer"></ion-input>
               
               <ion-item *ngSwitchCase="'multiple-choice'">
-                <ion-label>Choose multiple answers</ion-label>
+                <ion-label>Wähle mehrere Antworten aus!</ion-label>
                 <ion-checkbox *ngFor="let option of question.options" [checked]="isChecked(option)" (ionChange)="onMultipleChoiceChange(option, $event)">{{ option }}</ion-checkbox>
               </ion-item>
               
@@ -46,7 +46,7 @@
         </ion-item>
       </ion-list>
       <!-- Button below the questions -->
-      <ion-button expand="block" (click)="submitSurvey()">Submit</ion-button>
+      <ion-button expand="block" (click)="submitSurvey()">Absenden</ion-button>
     </ion-card-content>>
   </ion-card>
 </ion-content>

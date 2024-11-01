@@ -39,10 +39,10 @@ export class ChangePWPage implements OnInit{
     const result = await this.updateService.changePassword(this.currentPassword, this.newPassword);
     
     if (result.success) {
-      // Bei Erfolg zur Einstellungsseite navigieren
+    
       this.router.navigate(['settings']);
     } else {
-      // Fehlerbehandlung basierend auf dem Fehlercode
+    
       const message = result.errorCode === 401 ? 
         'The current password is wrong. Please try again.' : 
         'Unable to change password. Please try again later.';

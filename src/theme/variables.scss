@@ -3,8 +3,16 @@
 
 /** Ionic CSS Variables **/
 :root {
+
+  --ion-background-color: #ebf1fc ; /* Standard-Hintergrundfarbe für ion-content auf Weiß */
+  --ion-menu-background: #ffffff; /* Standard-Hintergrundfarbe für ion-menu auf Weiß */
+  --ion-card-color: #000000; /* Textfarbe der Karten */
+  --ion-card-border-color: #ffffff; /* Rahmenfarbe der Karten */
+
+    --ion-color-card: #6d9cf2
+
     /** primary **/
-    --ion-color-primary: #3880ff;
+    --ion-color-primary: #3880ff; 
     --ion-color-primary-rgb: 56, 128, 255;
     --ion-color-primary-contrast: #ffffff;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
@@ -28,9 +36,9 @@
     --ion-color-tertiary-tint: #6370ff;
   
     /** success **/
-    --ion-color-success: #2dd36f;
+    --ion-color-success: #95b4ed;
     --ion-color-success-rgb: 45, 211, 111;
-    --ion-color-success-contrast: #ffffff;
+    --ion-color-success-contrast: #232838;
     --ion-color-success-contrast-rgb: 255, 255, 255;
     --ion-color-success-shade: #28ba62;
     --ion-color-success-tint: #42d77d;
@@ -83,6 +91,7 @@
      */
   
     body.dark {
+      --ion-background-color: #43454d
       --ion-color-primary: #428cff;
       --ion-color-primary-rgb: 66,140,255;
       --ion-color-primary-contrast: #ffffff;

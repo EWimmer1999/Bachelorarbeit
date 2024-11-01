@@ -48,32 +48,32 @@ export class EditEntryPage implements OnInit {
       this.activity2 = entry.activities.excited;
       this.activity3 = entry.activities.sad;
       this.stressLevel = entry.stressLevel;
-      this.foodCategory = entry.foodCategory; // Hier wird die foodCategory gesetzt
+      this.foodCategory = entry.foodCategory; 
     }
   }
 
   openDateCalendar() {
-    this.showDatePicker = true; // Zeige das Datumspopup
+    this.showDatePicker = true; 
   }
 
   closeCalendar() {
-    this.showDatePicker = false; // Schließe das Datumspopup
+    this.showDatePicker = false; 
   }
 
   confirmDateChange() {
-    this.closeCalendar(); // Schließe das Datumspopup
+    this.closeCalendar(); 
   }
 
   openTimePicker() {
-    this.showTimePicker = true; // Zeige das Zeitpopup
+    this.showTimePicker = true; 
   }
 
   closeTimePicker() {
-    this.showTimePicker = false; // Schließe das Zeitpopup
+    this.showTimePicker = false; 
   }
 
   confirmTimeChange() {
-    this.closeTimePicker(); // Schließe das Zeitpopup
+    this.closeTimePicker();
   }
 
   async saveEntry() {
@@ -97,4 +97,7 @@ export class EditEntryPage implements OnInit {
     await this.diaryService.updateDiaryEntry(updatedEntry);
     this.router.navigate(['diary']);
   }
+
+
+
 }

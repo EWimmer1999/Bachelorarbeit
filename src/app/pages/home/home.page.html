@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      Startseite
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -24,11 +24,11 @@
 
   <ion-card>
     <ion-button *ngIf="showButton" routerLink="/demographic">
-      Demographic Button
+      Demografischen Fragebogen ausfüllen
     </ion-button>
   </ion-card>
 
-  <ion-card>
+  <ion-card color="success">
     <ion-card-header>
       <ion-card-title>Tägliche Schritte</ion-card-title>
     </ion-card-header>
@@ -37,7 +37,7 @@
     </ion-card-content>
   </ion-card>
   
-  <ion-card>
+  <ion-card color="success">
     <ion-card-header>
       <ion-card-title>Aktueller Geräuschpegel</ion-card-title>
     </ion-card-header>
@@ -52,7 +52,7 @@
   </ion-card>
   
 
-  <ion-card>
+  <ion-card ion-card color="success">
     <ion-card-header>
       <ion-card-title>Durchschnittlicher Geräuschpegel</ion-card-title>
     </ion-card-header>
@@ -62,8 +62,11 @@
     <ion-button expand="full" routerLink="/noisemeter">Details</ion-button>
   </ion-card>
 
-  <ion-card>
-    <ion-button routerLink="/diary">Go to diary</ion-button>
+  <ion-card ion-card color="success">
+    <ion-card-header>
+      <ion-card-title>Einen neuen Esstagebucheintrag anlegen</ion-card-title>
+    </ion-card-header>
+    <ion-button expand="full" routerLink="/new-diary">Erstellen</ion-button>
   </ion-card>
   
 </ion-content>
